@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v3.1[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v3.1.1[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -58,7 +58,7 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 [b]A:[/b] At present time, it is not possible to mass-move messages from the Outbox or Sent Items folder.  Future versions of this mod may resolve this issue.
 
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url] - Portuguese_pt and Portuguese_pt-UTf8 translation
+o [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786]@rjen[/url] - Dutch translation
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=8.msg133#msg133]XPtsp.com[/url].

@@ -1,3 +1,6 @@
+v3.1.1 - July 6th, 2015
+o Added Dutch translation, courtsey of [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786]@rjen[/url]
+
 v3.1 - June 8th, 2015
 o Added additional restriction so PM Quick Reply isn't shown if no PMs are present.
 o Fixed undefined index error in [b]PersonalMessage.template.php[/b] for SMF 2.0.
