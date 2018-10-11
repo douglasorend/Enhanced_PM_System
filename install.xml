@@ -167,7 +167,7 @@
 	<operation>
 		<search position="before"><![CDATA[$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);]]></search>
 		<add><![CDATA[
-	$context['edit'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['edit']);
+	$context['edit'] = isset($_REQUEST['pmsg']) && isset($_REQUEST['edit']);
 	if ($context['edit'])
 	{
 		// Why would you try to edit someone else's PM?
@@ -971,7 +971,7 @@ if ($context['folder'] != 'unread')
 {]]></add>
   </operation>
   <operation>
-    <search position="after"><![CDATA[  echo '
+    <search position="after"><![CDATA[	echo '
 				</div>
 	</div>';
 }]]></search>

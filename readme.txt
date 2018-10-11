@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.0[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.1[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url]
 [/center]
 [hr]
@@ -29,16 +29,21 @@ o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]
 [color=blue][b][size=12pt][u]Mail Icons[/u][/size][/b][/color]
 o [url=http://code.google.com/p/ultimate-gnome/]Ultimate Gnome[/url] iconset (released under a GPL license) found at [url=http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome]IconFinder.com[/url]
 
-[color=blue][b][size=12pt][u]Known Compatibility Notes & Issues[/u][/size][/b][/color]
+[color=blue][b][size=12pt][u]Compatibility Notes & Known Issues[/u][/size][/b][/color]
 This mod was tested on SMF 2.0.4, and may work on SMF 2.0 and later.  SMF 1.x is not and will not be supported!
 
 The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments[/url] mod should be installed first to avoid any conflict with this mod.
 
-At present time, it is not possible to list and/or remove files attached to the PM while editing the PM.  Future versions of this mod should provide this support.
+At present time, it is not possible to list and/or remove files attached to the PM while editing the PM.  Future versions of this mod may resolve this issue.
+
+At present time, it is not possible to mass-move or mass-delete messages from the outbox.  Future versions of this mod may resolve this issue.
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
-v1.0 - August 4th, 2013
+v1.0 - April 9, 2014
 o Initial Release of the mod
+
+v1.1 - June 1st, 2013
+o Fixed an error that keeps users from quoting or replying to PMs...
 
 [hr]
 [url=http://creativecommons.org/licenses/by/3.0][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]

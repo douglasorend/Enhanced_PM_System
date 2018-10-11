@@ -5,7 +5,7 @@
 	<id>Dougiefresh:Enhanced_PM_System</id>
 	<name>Enhanced PM System</name>
 	<type>modification</type>
-	<version>1.0</version>
+	<version>1.1</version>
 
 	<install for="2.0 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
@@ -23,4 +23,9 @@
 		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
 	</uninstall>
+	
+	<upgrade from="1.0">
+		<readme parsebbc="true">upgrade.txt</readme>
+		<modification format="xml">upgrade_1.1.xml</modification>
+	</upgrade>
 </package-info>
