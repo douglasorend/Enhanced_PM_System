@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.5[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.6[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -41,10 +41,16 @@ At present time, it is not possible to list and/or remove files attached to the 
 At present time, it is not possible to mass-move or mass-delete messages from the Outbox.  Future versions of this mod may resolve this issue.
 
 [color=blue][b][size=12pt][u]Upgrade from Previous Version(s)[/u][/size][/b][/color]
-Upgrade is possible from [b]v1.0 thru v1.4[/b] to [b]v1.5[/b].
+Upgrade is possible from [b]v1.5[/b] to [b]v1.6[/b].
 
 [hr]
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[u][b]v1.6 - June 30th, 2014[/b][/u]
+o Fix for incorrect Unsend/Edit buttons showing up for PMs.
+o Fix for reporting message sent correctly, instead of message edited
+o Fixes for "Disappearing & Lost PM problem", reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Some additional weird code problems fixed by this upgrade....
+
 [u][b]v1.5 - June 30th, 2014[/b][/u]
 o Added support for English-British and English-British UTF8 languages...
 o Seperated English and English-UTF8 language file and fixed UTF8 file...

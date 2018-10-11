@@ -1,13 +1,14 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.5[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.6[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
 
 [color=blue][b][size=12pt][u]What's Changed?[/u][/size][/b][/color]
-Mostly bug fixes.  See changelog below for specifics....
+[u][b]v1.6 - June 30th, 2014[/b][/u]
+o Fixes for "Disappearing & Lost PM problem", reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Fix for reporting message sent correctly, instead of message edited
 
-[color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 [u][b]v1.5 - June 30th, 2014[/b][/u]
 o Added support for English-British and English-British UTF8 languages...
 o Seperated English and English-UTF8 language file and fixed UTF8 file...
@@ -38,9 +39,6 @@ o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to
 
 [u][b]v1.1 - June 1st, 2014[/b][/u]
 o Fixed an error that keeps users from quoting or replying to PMs...  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=395983]etn991[/url]!
-
-[u][b]v1.0 - April 9, 2014[/b][/u]
-o Initial Release of the mod
 
 [hr]
 [url=http://creativecommons.org/licenses/by/3.0][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]

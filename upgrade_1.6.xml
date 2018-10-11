@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.6</version>
+
+<!---------------------------------------------------------------------------->
+<!-- Fix for reporting message sent correctly, instead of message edited    -->
+<!---------------------------------------------------------------------------->
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=' . (empty($_GET['pmsg']) ? 'sent' : 'edit');]]></search>
+		<add><![CDATA[$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=' . (!isset($_REQUEST['edit']) ? 'sent' : 'edit');]]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- Fixes for "Disappearing & Lost PM problem", reported by FragaCampos    -->
+<!---------------------------------------------------------------------------->
+<file name="$sourcedir/Subs-Post.php">
+	<operation>
+		<search position="replace"><![CDATA[// Insert the message itself and then grab the last insert id.
+	if (empty($pmsg))
+	{
+		$smcFunc['db_insert']('',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				$pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = $smcFunc['db_insert_id']('{db_prefix}personal_messages', 'id_pm');
+	}
+	else
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm' => 'int', 'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				(int) $pmsg, $pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = (int) $pmsg;
+	}
+]]></search>
+		<add><![CDATA[// Insert the message itself and then grab the last insert id.
+	if (empty($pmsg) || !isset($_REQUEST['edit']))
+	{
+		$smcFunc['db_insert']('',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				$pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = $smcFunc['db_insert_id']('{db_prefix}personal_messages', 'id_pm');
+	}
+	else
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm' => 'int', 'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				(int) $pmsg, $pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = (int) $pmsg;
+	}
+]]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Weird uninstall problems fixed by this upgrade                         -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0, isset($deletes[$to]) ? 1 : 0, isset($already_emailed[$to]) ? $already_emailed[$to] : 0]]></search>
+		<add><![CDATA[$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0, isset($deletes[$to]) ? 1 : 0, isset($already_emailed[$to]) ? $already_emailed[$to] : 1]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[SELECT id_member
+			FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:id_pm}',
+			array(
+				'id_pm' => $pmsg,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$already_emailed[$row['id_member']] = true;]]></search>
+		<add><![CDATA[SELECT id_member, is_read
+			FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:id_pm}',
+			array(
+				'id_pm' => $pmsg,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$already_emailed[$row['id_member']] = $row['is_read'];]]></add>
+	</operation>
+</file>
+<file name="$themedir/PersonalMessage.template.php">
+	<operation>
+		<search position="replace"><![CDATA[';
+    if ($context['folder'] != 'unread')
+      echo '
+			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></search>
+		<add><![CDATA[';
+		if ($context['folder'] != 'unread')
+			echo '
+			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></add>
+	</operation>
+	
+<!---------------------------------------------------------------------------->
+<!-- Fixes for "Disappearing & Lost PM problem", reported by FragaCampos    -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[$which = $txt[ isset($context['edit']) ? 'edit_message' : 'new_message' ];]]></search>
+		<add><![CDATA[$which = $txt[ $context['edit'] ? 'edit_message' : 'new_message' ];]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', ]]></search>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', ]]></add>
+	</operation>
+	
+<!---------------------------------------------------------------------------->
+<!-- Fix for incorrect user icons in the Outbox                             -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[
+					if ($context['folder'] != 'unread')
+						echo '
+					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
+]]></search>
+		<add><![CDATA[
+					if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))
+						echo '
+					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
+
+					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
+					{
+						if (empty($modSettings['eps_deny_unsend']))
+							echo '
+					<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
+						if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+							echo '
+					<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
+					}
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';
+			if ($context['folder'] == 'unread')
+			{
+				if (empty($modSettings['eps_deny_unsend']))
+					echo '
+					<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
+				if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+					echo '
+					<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
+			}
+]]></search>
+		<add><![CDATA[<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';]]></add>
+	</operation>
+
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- Fixes for "Disappearing & Lost PM problem", reported by FragaCampos    -->
+<!---------------------------------------------------------------------------->
+<file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$which = $txt[ isset($context['edit']) ? 'edit_message' : 'new_message' ];]]></search>
+		<add><![CDATA[$which = $txt[ $context['edit'] ? 'edit_message' : 'new_message' ];]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', ]]></search>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', ]]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Fix for incorrect user icons in the Outbox                             -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] != 'unread')
+					echo '
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a></li>
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $quote_button, '</a></li>';]]></search>
+		<add><![CDATA[if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))
+				echo '
+			<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+			<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
+
+			elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
+			{
+				if (empty($modSettings['eps_deny_unsend']))
+					echo '
+			<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
+				if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+					echo '
+			<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
+			}
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<li><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $delete_button, '</a></li>';
+			if ($context['folder'] == 'unread')
+			{
+				if (empty($modSettings['eps_deny_unsend']))
+					echo '
+					<li><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $unsend_button, '</a></li>';
+				if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+					echo '
+					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $edit_button, '</a></li>';
+			}]]></search>
+		<add><![CDATA[<li><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $delete_button, '</a></li>';]]></add>
+	</operation>
+	
+<!---------------------------------------------------------------------------->
+<!-- Weird uninstall problems fixed by this upgrade                         -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[';
+		if ($context['folder'] != 'unread')
+      echo '
+				<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></search>
+		<add><![CDATA[';
+		if ($context['folder'] != 'unread')
+			echo '
+			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[';
+	if ($context['folder'] != 'unread')
+    echo '
+				<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
+';]]></search>
+		<add><![CDATA[';
+	if ($context['folder'] != 'unread')
+		echo '
+				<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
+';
+	echo '
+]]></add>
+	</operation>
+</file>
+
+</modification>
