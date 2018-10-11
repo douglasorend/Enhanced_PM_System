@@ -1,10 +1,12 @@
-[hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v3.5[/b][/size][/color]
-[url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
-[/center]
-[hr]
+-------
 
-[color=blue][b][size=12pt][u]Introduction[/u][/size][/b][/color]
+# ENHANCED PM SYSTEM v3.5
+
+[**By Dougiefresh**](http://www.simplemachines.org/community/index.php?action=profile;u=253913) - [Link to Mod](http://custom.simplemachines.org/mods/index.php?mod=3736)
+
+-------
+
+# Introduction
 This mod makes some changes to the PM system, seperating the PM conversations from the PM list.  It forces all users to conversation mode and makes users click on the message they want to view.  This keeps the forum from marking the latest message as read if you glance over the message list and click on something else and want to read a message that isn't the latest message received.
 
 It adds an Outbox to the mix and seperates unread PMs from those that have been read.  It changes the "labels" into "folders" and removes the contents of the PM from the email notification.  It will allow users to edit PMs that they have sent out, as long as NO RECIPIENT has read it.  It also allows users to unsend and delete any unread PMs to other users.
@@ -17,54 +19,57 @@ Version 3.0 adds the PM Quick Reply box, as well as changes some options to memb
 
 As a anti-spam measure, this mod can block new members from sending PMs during the 24-hour period after their account is activated.  Please note that members activated before this mod is installed will not be affected by this anti-spam measure, as the activation time is not recorded in the database prior to this mod.
 
-[color=blue][b][size=12pt][u]Related Discussions[/u][/size][/b][/color]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=420396]PM Separate List and View Request[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a Copy[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=426840]Private Message Email Notification[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=128571]PM outbox/sent like phpbb[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=29990]Unsend PM[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=403840]Outbox with editable PMs[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=333117]Require Subject for PMs[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=460098]Block PM on the first day[/url]
-o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=498600]Search by Sent PMs[/url]
-o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3713864#msg3713864]Perform Actions on Searched-For PMs[/url]
-o [DONE] [b]NEW FOR V2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=478886]"User xx has blocked your personal message."[/url]
-o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412263]Allow Members to Send PM's While Muted[/url]
-o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412757]PM Message Rules - Members can avoid Admin PMs & Warning PMs[/url]
-o [DONE] [b]NEW FOR V2.2:[/b] [url=http://www.simplemachines.org/community/index.php?topic=503208.msg3539234#msg3539234]A "Quote to All" in PM Conversation mode?[/url]
-o [DONE] [b]NEW FOR V3.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3804931#msg3804931]PM Quick Reply[/url]
-o [INCOMPLETE] [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url]
+## Related Discussions
 
-[color=blue][b][size=12pt][u]Permission Notices[/u][/size][/b][/color]
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=261314]MLM[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a copy[/url] discussion.
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]floydpink[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url] discussion.
+- [DONE] [PM Separate List and View Request](http://www.simplemachines.org/community/index.php?topic=420396)
+- [DONE] [Always PM Conversation and Save a Copy](http://www.simplemachines.org/community/index.php?topic=427762)
+- [DONE] [Private Message Email Notification](http://www.simplemachines.org/community/index.php?topic=426840)
+- [DONE] [PM outbox/sent like phpbb](http://www.simplemachines.org/community/index.php?topic=128571)
+- [DONE] [Unsend PM](http://www.simplemachines.org/community/index.php?topic=29990)
+- [DONE] [Outbox with editable PMs](http://www.simplemachines.org/community/index.php?topic=403840)
+- [DONE] [Require Subject for PMs](http://www.simplemachines.org/community/index.php?topic=333117)
+- [DONE] [Block PM on the first day](http://www.simplemachines.org/community/index.php?topic=460098)
+- [DONE] **NEW FOR v2.0:** [Search by Sent PMs](http://www.simplemachines.org/community/index.php?topic=498600)
+- [DONE] **NEW FOR v2.0:** [Perform Actions on Searched-For PMs](http://www.simplemachines.org/community/index.php?topic=521508.msg3713864#msg3713864)
+- [DONE] **NEW FOR V2.0:** ["User xx has blocked your personal message."](http://www.simplemachines.org/community/index.php?topic=478886)
+- [DONE] **NEW FOR V2.1:** [Allow Members to Send PM's While Muted](http://www.simplemachines.org/community/index.php?topic=412263)
+- [DONE] **NEW FOR V2.1:** [PM Message Rules - Members can avoid Admin PMs & Warning PMs](http://www.simplemachines.org/community/index.php?topic=412757)
+- [DONE] **NEW FOR V2.2:** [A "Quote to All" in PM Conversation mode?](http://www.simplemachines.org/community/index.php?topic=503208.msg3539234#msg3539234)
+- [DONE] **NEW FOR V3.0:** [PM Quick Reply](http://www.simplemachines.org/community/index.php?topic=521508.msg3804931#msg3804931)
+- [INCOMPLETE] [Move Personal Messages](http://www.simplemachines.org/community/index.php?topic=295253)
 
-[color=blue][b][size=12pt][u]Mail Icons[/u][/size][/b][/color]
-o [url=http://code.google.com/p/ultimate-gnome/]Ultimate Gnome[/url] iconset (released under a GPL license) found at [url=http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome]IconFinder.com[/url]
+## Permission Notices
 
-[color=blue][b][size=12pt][u]Compatibility Notes[/u][/size][/b][/color]
+- [MLM](http://www.simplemachines.org/community/index.php?action=profile;u=261314) gave permission to use his changes from [Always PM Conversation and Save a copy](http://www.simplemachines.org/community/index.php?topic=427762) discussion.
+- [floydpink](http://www.simplemachines.org/community/index.php?action=profile;u=73143) gave permission to use his changes from [Move Personal Messages](http://www.simplemachines.org/community/index.php?topic=295253) discussion.
+
+## Mail Icons
+
+- [Ultimate Gnome](http://code.google.com/p/ultimate-gnome/) iconset (released under a GPL license) found at [IconFinder.com](http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome)
+
+## Compatibility Notes
 This mod was tested on SMF 2.0.9, but should work on SMF 2.1 Beta 2, as well as SMF 2.0 and up.  SMF 1.x is not and will not be supported.
 
-The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments[/url] mod should be installed first to avoid any conflict with this mod.
+The [PM Attachments](http://custom.simplemachines.org/mods/index.php?mod=1974) mod should be installed first to avoid any conflict with this mod.
 
-[color=blue][b][size=12pt][u]Questions and Answers[/u][/size][/b][/color]
-[b]Q:[/b] Will this mod ever include PM attachment support?
-[b]A:[/b] No, there is a [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments[/url] mod already developed that supports this.  The exception is editing PMs with attachments, which this mod will eventually support fully.
+## Questions and Answers
+**Q:** Will this mod ever include PM attachment support?
+**A:** No, there is a [PM Attachments](http://custom.simplemachines.org/mods/index.php?mod=1974) mod already developed that supports this.  The exception is editing PMs with attachments, which this mod will eventually support fully.
 
-[b]Q:[/b] Why can't I edit the attachments on a PM?
-[b]A:[/b] At present time, it is not possible to list and/or remove files attached to the PM while editing the PM.  Future versions of this mod will resolve this issue.
+**Q:** Why can't I edit the attachments on a PM?
+**A:** At present time, it is not possible to list and/or remove files attached to the PM while editing the PM.  Future versions of this mod will resolve this issue.
 
-[b]Q:[/b] Why can't I move messages from the Outbox and/or Sent Items folder?
-[b]A:[/b] At present time, it is not possible to mass-move messages from the Outbox or Sent Items folder.  Future versions of this mod may resolve this issue.
+**Q:** Why can't I move messages from the Outbox and/or Sent Items folder?
+**A:** At present time, it is not possible to mass-move messages from the Outbox or Sent Items folder.  Future versions of this mod may resolve this issue.
 
-[color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786]@rjen[/url] - Dutch translation
+## Translators
+- [@rjen](http://www.simplemachines.org/community/index.php?action=profile;u=287786) - Dutch translation
 
-[color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
-The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=8.msg133#msg133]XPtsp.com[/url].
+## Changelog
+The changelog has been removed and can be seen at [XPtsp.com](http://www.xptsp.com/board/index.php?topic=8.msg133#msg133).
 
-[color=blue][b][size=12pt][u]License[/u][/size][/b][/color]
-Copyright (c) 2015, Douglas Orend
+## License
+Copyright (c) 2015 - 2018, Douglas Orend
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

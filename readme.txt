@@ -64,7 +64,7 @@ o [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=8.msg133#msg133]XPtsp.com[/url].
 
 [color=blue][b][size=12pt][u]License[/u][/size][/b][/color]
-Copyright (c) 2015, Douglas Orend
+Copyright (c) 2015 - 2018, Douglas Orend
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
