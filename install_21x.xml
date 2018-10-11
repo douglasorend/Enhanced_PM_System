@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>3.2</version>
+<version>3.3</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -1420,7 +1420,7 @@ function UnsendMessage()
 	echo ']]></add>
 	</operation>
 	<operation>
-		<search position="before"><![CDATA[<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" />]]></search>
+		<search position="before"><![CDATA[<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked' : '', ' class="input_check">]]></search>
 		<add><![CDATA[
 								</dd>
 								<dt>
@@ -1560,19 +1560,20 @@ function UnsendMessage()
 	if ( (($context['display_mode'] == 2 && isset($_GET['pmid'])) || $context['display_mode'] != 2) & $m)]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[<th width="4%" class="centercol first_th">
+		<search position="replace"><![CDATA[<th width="4%" class="centercol">
 				<a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? '' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"> <span class="generic_icons switch" title="', $txt['pm_change_view'], '"></span></a>
 			</th>]]></search>
-		<add><![CDATA[<th width="4%" class="centercol first_th">
+		<add><![CDATA[<th width="4%" class="centercol">
 				' . (!empty($modSettings['eps_pm_view_switch']) ? '<a href="' . $scripturl . '?action=pm;view;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? '' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . '"> <span class="generic_icons switch" title="' . $txt['pm_change_view'] . '"></span></a>' : '') . '
 			</th>]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$next_alternate = false;]]></search>
-		<add><![CDATA[$next_alternate = false;
-	$eps_mail_read = '<span class="generic_icons mail_read" title="' . $txt['pm_read'] . '"></span>';
+		<search position="after"><![CDATA[
+	while ($message = $context['get_pmessage']('subject'))]]></search>
+		<add><![CDATA[	$eps_mail_read = '<span class="generic_icons mail_read" title="' . $txt['pm_read'] . '"></span>';
 	$eps_mail_unread = '<span class="generic_icons mail_unread" title="' . $txt['pm_unread'] . '"></span>';
-	$eps_mail_reply = '<span class="generic_icons mail_replied" title="' . $txt['pm_replied'] . '"></span>';]]></add>
+	$eps_mail_reply = '<span class="generic_icons mail_replied" title="' . $txt['pm_replied'] . '"></span>';
+]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
@@ -1586,23 +1587,23 @@ function UnsendMessage()
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
-					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" class="reply_button">', $txt['reply'], '</a></li>
-					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '" class="quote_button">', $txt['quote_action'], '</a></li>';]]></search>
+						<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '"><span class="generic_icons reply_button"></span>', $txt['reply'], '</a></li>
+						<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '"><span class="generic_icons quote"></span>', $txt['quote_action'], '</a></li>';]]></search>
 							<add><![CDATA[
 					if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))
 						echo '
-					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" class="reply_button">', $txt['reply'], '</a></li>
-					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '" class="quote_button">', $txt['quote_action'], '</a></li>
-					' . !empty($message['recipients']['to']) ? count($message['recipients']['to']) != 1 ? '<li><a href="' . $scripturl . '?action=pm;sa=send;f=' . ($context['folder'] . $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';pmsg=' . $message['id'] . ';quote;u=all" class="quote_button">' . $txt['quote_to_all'] . '</a></li>' : '' : '';
+					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '"<span class="generic_icons reply_button"></span>', $txt['reply'], '</a></li>
+					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '"><span class="generic_icons quote"></span>', $txt['quote_action'], '</a></li>
+					' . !empty($message['recipients']['to']) ? count($message['recipients']['to']) != 1 ? '<li><a href="' . $scripturl . '?action=pm;sa=send;f=' . ($context['folder'] . $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';pmsg=' . $message['id'] . ';quote;u=all"><span class="generic_icons quote"></span>' . $txt['quote_to_all'] . '</a></li>' : '' : '';
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
 						if (!empty($context['eps']['eps_allow_unsend']))
 							echo '
-					<li><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');" class="unsend_button">', $txt['unsend_item'], '</a></li>';
+					<li><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');"><span class="generic_icons unsend_button"></span>', $txt['unsend_item'], '</a></li>';
 						if (!empty($context['eps']['eps_allow_edit']))
 							echo '
-					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit" class="edit_button">', $txt['pm_edit'], '</a></li>';
+					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit"><span class="generic_icons edit_button"></span>', $txt['pm_edit'], '</a></li>';
 					}
 ]]></add>
 	</operation>
@@ -1664,9 +1665,9 @@ function template_folder()
 	<table class="table_grid">
 	<thead>
 		<tr class="title_bar">
-			<th class="lefttext first_th" width="30%">', $txt['date'], '</th>
+			<th class="lefttext" width="30%">', $txt['date'], '</th>
 			<th class="lefttext" width="50%">', $txt['subject'], '</th>
-			<th class="lefttext last_th" width="20%">', $txt['from'], '</th>
+			<th class="lefttext" width="20%">', $txt['from'], '</th>
 		</tr>
 	</thead>
 	<tbody>';]]></search>
@@ -1676,17 +1677,17 @@ function template_folder()
 	// complete results ?
 	if (empty($context['search_params']['show_complete']) && !empty($context['personal_messages']))
 		echo '
-		<table class="table_grid">
-		<thead>
-			<tr class="title_bar">
-				<th class="lefttext first_th" width="4%" />
-				<th class="lefttext" width="30%">', $txt['date'], '</th>
-				<th class="lefttext" width="50%">', $txt['subject'], '</th>
-				<th class="lefttext" width="20%">', ($context['folder'] == 'inbox' ? $txt['from'] : $txt['to']), '</th>
-				<th align="center" width="4%" class="last_th"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></th>
-			</tr>
-		</thead>
-		<tbody>';]]></add>
+	<table class="table_grid">
+	<thead>
+		<tr class="title_bar">
+			<th class="lefttext" width="4%" />
+			<th class="lefttext" width="30%">', $txt['date'], '</th>
+			<th class="lefttext" width="50%">', $txt['subject'], '</th>
+			<th class="lefttext" width="20%">', ($context['folder'] == 'inbox' ? $txt['from'] : $txt['to']), '</th>
+			<th align="center" width="4%" class="last_th"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></th>
+		</tr>
+	</thead>
+	<tbody>';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[<td>', $message['time'], '</td>
@@ -1943,8 +1944,7 @@ function template_folder_actions()
 <!-- Gotta make the Complete Results part of PM Search pretty..... :p     -->
 <!-------------------------------------------------------------------------->
 	<operation>
-		<search position="replace"><![CDATA[$alternate = true;
-	// Print each message out...
+		<search position="replace"><![CDATA[// Print each message out...
 	foreach ($context['personal_messages'] as $message)
 	{
 		// We showing it all?
@@ -1971,7 +1971,7 @@ function template_folder_actions()
 					echo '
 				</h3>
 			</div>
-			<div class="windowbg', $alternate ? '2': '', '">
+			<div class="windowbg">
 				', $message['body'], '
 				<p class="pm_reply righttext">';
 
@@ -2003,15 +2003,12 @@ function template_folder_actions()
 			</h3>
 		</div>';
 
-	$alternate = true;
 	// Print each message out...
 	foreach ($context['personal_messages'] as $message)
 	{
 		// We showing it all?
 		if (!empty($context['search_params']['show_complete']))
 		{
-			$window_class = $alternate ? 'windowbg' : 'windowbg2';
-
 			echo '
 	<div class="title_bar">
 		<h3 class="titlebg">
@@ -2019,7 +2016,7 @@ function template_folder_actions()
 			<span class="floatleft">', $message['icon'], ' # ', $message['counter'], ' &#187; <a href="', $message['href'], '">', $message['subject'], '</a></span>
 		</h3>
 	</div>
-	<div class="', $window_class, '">
+	<div class="windowbg">
 		<div class="poster">';
 
 		// EPS: Are there any custom fields above the member name?
@@ -2364,9 +2361,9 @@ function template_folder_actions()
 <!-- Operation to add Outbox to the pop-up "My Messages" window           -->
 <!-------------------------------------------------------------------------->
 	<operation>
-		<search position="before"><![CDATA[| <a href="', $scripturl, '?action=pm;f=sent">', $txt['pm_sent_short'], '</a>]]></search>
-		<add><![CDATA[
-				| <a href="', $scripturl, '?action=pm;f=unread">', $txt['unread_items'], '</a>]]></add>
+		<search position="replace"><![CDATA[', $context['can_draft'] ? '<a href="' . $scripturl . '?action=pm;sa=showpmdrafts">' . $txt['pm_drafts_short'] . '</a>' : '', ']]></search>
+		<add><![CDATA[', $context['can_draft'] ? '<a href="' . $scripturl . '?action=pm;sa=showpmdrafts">' . $txt['pm_drafts_short'] . '</a> |' : '', '
+				<a href="', $scripturl, '?action=pm;f=unread">', $txt['unread_items'], '</a>]]></add>
 	</operation>
 
 <!-------------------------------------------------------------------------->

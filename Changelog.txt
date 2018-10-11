@@ -1,3 +1,7 @@
+v3.3 - September 2nd, 2015
+o Removed support for SMF 2.1 Beta 1
+o Added support for SMF 2.1 Beta 2
+
 v3.2 - August 7th, 2015
 o Modifications made so that it can be installed beside "Slash through Banned Usernames" mod.
 o Changed "most recent personal message" into "most recent conversation" on PM settings page.

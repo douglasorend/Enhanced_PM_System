@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>3.2</version>
+<version>3.3</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -2434,11 +2434,13 @@ function template_folder_actions()
 			</th>]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$next_alternate = false;]]></search>
-		<add><![CDATA[$next_alternate = false;
+		<search position="after"><![CDATA[
+	while ($message = $context['get_pmessage']('subject'))]]></search>
+		<add><![CDATA[
 	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" title="' . $txt['pm_read'] . '" />';
 	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_unread'] . '" title="' . $txt['pm_unread'] . '" />';
-	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';]]></add>
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';
+]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
