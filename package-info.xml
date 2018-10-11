@@ -5,7 +5,7 @@
 	<id>Dougiefresh:Enhanced_PM_System</id>
 	<name>Enhanced PM System</name>
 	<type>modification</type>
-	<version>3.5</version>
+	<version>3.5.1</version>
 
 	<install for="2.0 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
@@ -16,10 +16,13 @@
 		<require-file name="EnhancedPMSystem.english.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.english-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.dutch.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.russian-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.portuguese_brazilian.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.portuguese_brazilian-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.spanish_es.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.spanish_es-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="enhanced_pm.css" destination="$themedir/css" />
 		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
 		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
@@ -37,8 +40,11 @@
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.dutch.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.russian-utf8.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin-utf8.php" />
 		<remove-file name="$themedir/css/enhanced_pm.css" />
 		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
@@ -57,8 +63,11 @@
 		<require-file name="EnhancedPMSystem.dutch.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.portuguese_brazilian.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.portuguese_brazilian-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.russian-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.spanish_es.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="EnhancedPMSystem.spanish_es-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin-utf8.php" destination="$boarddir/Themes/default/languages" />
 		<require-file name="enhanced_pm.css" destination="$themedir/css" />
 		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
 		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
@@ -76,6 +85,11 @@
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.dutch.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian.php" />
 		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.russian-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin-utf8.php" />
 		<remove-file name="$themedir/css/enhanced_pm.css" />
 		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
