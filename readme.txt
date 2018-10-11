@@ -59,6 +59,8 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786]@rjen[/url] - Dutch translation
+o [url=https://www.simplemachines.org/community/index.php?action=profile;u=431601]messire_Leonard[/url] - Russian translation!
+o [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url]! - Spanish Latin translation
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=8.msg133#msg133]XPtsp.com[/url].

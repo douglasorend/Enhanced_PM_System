@@ -1,5 +1,5 @@
 v3.5.1 - August 19th, 2016
-o Added Russina translation to the mod.  Thanks, [url=https://www.simplemachines.org/community/index.php?action=profile;u=431601]messire_Leonard[/url]!
+o Added Russian translation to the mod.  Thanks, [url=https://www.simplemachines.org/community/index.php?action=profile;u=431601]messire_Leonard[/url]!
 o Added Spanish Latin translation to the mod.  Thanks, [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url]!
 
 v3.5 - December 28th, 2015

@@ -63,7 +63,10 @@ The [PM Attachments](http://custom.simplemachines.org/mods/index.php?mod=1974) m
 **A:** At present time, it is not possible to mass-move messages from the Outbox or Sent Items folder.  Future versions of this mod may resolve this issue.
 
 ## Translators
+
 - [@rjen](http://www.simplemachines.org/community/index.php?action=profile;u=287786) - Dutch translation
+- [messire_Leonard](https://www.simplemachines.org/community/index.php?action=profile;u=431601) - Russian translation
+- [Rock Lee](https://www.simplemachines.org/community/index.php?action=profile;u=322597) - Spanish Latin translation
 
 ## Changelog
 The changelog has been removed and can be seen at [XPtsp.com](http://www.xptsp.com/board/index.php?topic=8.msg133#msg133).
