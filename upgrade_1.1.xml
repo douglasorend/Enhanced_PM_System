@@ -5,7 +5,7 @@
 <version>1.1</version>
 
 <!-------------------------------------------------------------------------->
-<!-- Fix to allow users to quote/reply to messages (PersonalMessage.php)  -->
+<!-- Fix to allow users to quote/reply to messages, reported by etn991    -->
 <!-------------------------------------------------------------------------->
 <file name="$sourcedir/PersonalMessage.php">
 	<operation>

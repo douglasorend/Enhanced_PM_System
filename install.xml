@@ -170,7 +170,7 @@
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$isReceived = $smcFunc['db_num_rows']($request) != 0;]]></search>
-		<add><![CDATA[$isReceived = !$context['edit'] && $smcFunc['db_num_rows']($request) != 0;]]></add>
+		<add><![CDATA[$isReceived = !isset($context['edit']) && $smcFunc['db_num_rows']($request) != 0;]]></add>
 	</operation>
 	<operation>
 		<search position="after"><![CDATA[else
@@ -904,6 +904,13 @@ function UnsendMessage()
 <!-------------------------------------------------------------------------------->
 <file name="$themedir/PersonalMessage.template.php">
 	<operation>
+		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
+		<add><![CDATA[<span id="actionAddHere"></span><br />';
+//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+	echo ']]></add>
+	</operation>
+	<operation>
 		<search position="replace"><![CDATA[
 			<th align="center" width="4%" class="last_th">
 				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
@@ -1050,9 +1057,9 @@ if ($context['folder'] != 'unread')
 	<operation>
 		<search position="replace"><![CDATA[$next_alternate = false;]]></search>
 		<add><![CDATA[$next_alternate = false;
-	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
-	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
-	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" title="' . $txt['pm_read'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_unread'] . '" title="' . $txt['pm_unread'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
@@ -1176,8 +1183,15 @@ ul.quickbuttons li.modify_button]]></add>
 <!-- Core Template edits (PersonalMessage.template.php)                   -->
 <!-------------------------------------------------------------------------->
 <file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
-  <operation>
-    <search position="replace"><![CDATA[
+	<operation>
+		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
+		<add><![CDATA[<span id="actionAddHere"></span><br />';
+//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+	echo ']]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
 				<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>]]></search>
 		<add><![CDATA[';
 	if ($context['folder'] != 'unread')
@@ -1188,18 +1202,18 @@ ul.quickbuttons li.modify_button]]></add>
 			]]></add>
 	</operation>
 	<operation>
-    <search position="replace"><![CDATA[
+		<search position="replace"><![CDATA[
 				<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>]]></search>
 		<add><![CDATA[';
 		if ($context['folder'] != 'unread')
       echo '
 				<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
 		echo ']]></add>
-  </operation>
-  <operation>
-    <search position="replace"><![CDATA[if ($context['show_delete'])]]></search>
-    <add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
-  </operation>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['show_delete'])]]></search>
+		<add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
+	</operation>
 	
 	<operation>
 		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
@@ -1281,9 +1295,9 @@ ul.quickbuttons li.modify_button]]></add>
 	<operation>
 		<search position="replace"><![CDATA[$next_alternate = 0;]]></search>
 		<add><![CDATA[$next_alternate = 0;
-	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
-	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
-	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" title="' . $txt['pm_read'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_unread'] . '" title="' . $txt['pm_unread'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
@@ -1291,7 +1305,7 @@ ul.quickbuttons li.modify_button]]></add>
 				<td>', $message['time'], '</td>
 				<td>', ($context['display_mode'] != 0 && $context['current_pm'] == $message['id'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></search>
 		<add><![CDATA[
-					', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'outbox' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
+					', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'unread' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
 				<td>', $message['time'], '</td>
 				<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
 	</operation>
@@ -1324,101 +1338,5 @@ ul.quickbuttons li.modify_button]]></add>
 		$unsend_button = create_button('eps_mail_unsend.png', 'unsend_item', 'unsend_item', 'align="middle"');
 		$edit_button = create_button('modify.gif', 'edit_message', 'pm_edit', 'align="middle"');]]></add>
 	</operation>		
-</file>		
-
-<!-------------------------------------------------------------------------->
-<!-- Language file edits (English - Modifications & PersonalMessage)      -->
-<!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.english.php">
-	<operation>
-		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
-		<add><![CDATA[// Version: 2.0; Modifications
-/* Enhanced PM System mod */
-$txt['eps_title'] = 'Enhanced PM System';
-$txt['eps_pm_view_switch'] = 'Allow users to select PM views other than conversation mode';
-$txt['eps_deny_unsend'] = 'Do not allow users to unsend an unread PM';
-$txt['eps_deny_edit'] = 'Do not allow users to edit an unread PM';
-$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-/* End Enhanced PM System mod */
-]]></add>
-	</operation>
-</file>
-<file name="$languagedir/PersonalMessage.english.php">
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_msg_label_title'] = 'Label Message';
-$txt['pm_msg_label_apply'] = 'Add Label';
-$txt['pm_msg_label_remove'] = 'Remove Label';]]></search>
-		<add><![CDATA[$txt['pm_msg_label_title'] = 'Move Message';
-$txt['pm_msg_label_apply'] = 'Move to';
-$txt['pm_msg_label_remove'] = 'Current Folder';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_sel_label_title'] = 'Label Selected';]]></search>
-		<add><![CDATA[$txt['pm_sel_label_title'] = 'Move Selected';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_manage_labels'] = 'Manage Labels';
-$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected labels?';
-$txt['pm_labels_desc'] = 'From here you can add, edit and delete the labels used in your personal message center.';
-$txt['pm_label_add_new'] = 'Add New Label';
-$txt['pm_label_name'] = 'Label Name';
-$txt['pm_labels_no_exist'] = 'You currently have no labels setup!';]]></search>
-		<add><![CDATA[$txt['pm_manage_labels'] = 'Manage Folders';
-$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected folders?';
-$txt['pm_labels_desc'] = 'From here you can add, edit and delete the folders used in your personal message center.';
-$txt['pm_label_add_new'] = 'Add New Folder';
-$txt['pm_label_name'] = 'Folder Name';
-$txt['pm_labels_no_exist'] = 'You currently have no folders setup!';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_labels'] = 'Labels';]]></search>
-		<add><![CDATA[$txt['pm_labels'] = 'Folders';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_search_choose_label'] = 'Choose labels to search by, or search all';]]></search>
-		<add><![CDATA[$txt['pm_search_choose_label'] = 'Choose folders to search by, or search all';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';]]></search>
-		<add><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['sent_items'] = 'Sent Items';]]></search>
-		<add><![CDATA[$txt['sent_items'] = 'Sent Items';
-$txt['unread_items'] = 'Outbox';
-$txt['unsend_item'] = 'Unsend';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_rule_label'] = 'Label message with';
-$txt['pm_rule_sel_label'] = 'Select Label';]]></search>
-		<add><![CDATA[$txt['pm_rule_label'] = 'Move message to folder';
-$txt['pm_rule_sel_label'] = 'Select Folder';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[?>]]></search>
-		<add><![CDATA[$txt['pm_edit'] = 'Edit';
-$txt['edit_message'] = 'Edit Message';
-$txt['pm_unsent_denied'] = 'You cannot unsend a message.';
-$txt['pm_unsent'] = 'Your message has been unsent from all recipients successfully.';
-$txt['pm_unsent_some'] = 'Your message has been unsent from all recipients who haven\'t read it successfully.';
-$txt['pm_edited'] = 'Your message has been edited and all new recipients have been sent emails.';
-$txt['pm_no_edit'] = 'Unable to edit PM because at least one recipient has read the PM that you are wanting to edit.';
-$txt['pm_send_blocked'] = 'You are not allowed to send PMs until 24 hours after account activation.';
-$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
-
-?>]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Label';]]></search>
-		<add><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Folder';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_current_label'] = 'Label';]]></search>
-		<add><![CDATA[$txt['pm_current_label'] = 'Folder';]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$txt['pm_readable_label'] = 'apply label &quot;{LABEL}&quot;';]]></search>
-		<add><![CDATA[$txt['pm_readable_label'] = 'move to folder &quot;{LABEL}&quot;';]]></add>
-	</operation>
 </file>
 </modification>

@@ -8,6 +8,15 @@
 Mostly bug fixes.  See changelog below for specifics....
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[u][b]v1.4 - June 26nd, 2014[/b][/u]
+o Moved language modifications into seperate file for ease of translation.  (No effect on install)
+o Added forgotten English UTF8 text to the installer for completeness.
+o Added Portuguese (Portuguese_pt) language file to the mix.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]!!!
+o Fixed incorrect image assigned to Outbox PMs.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]!
+o Fixed an undefined variable error, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Added Mail Image tooltips, as requested by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Fixed a "bug" in the [b]Manage Rules[/b] page that allowed users to assign more than one action to a Rule
+
 [u][b]v1.3 - June x, 2014[/b][/u]
 o Fixed a few SQL errors based on the INNER JOIN clauses resulting in cross joins.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=90366]butch2k[/url]!
 

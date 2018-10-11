@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.4</version>
+
+<!---------------------------------------------------------------------------->
+<!-- Fix for Undefined Var in PersonalMessage.php reported by FragaCampos   -->
+<!---------------------------------------------------------------------------->
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[$isReceived = !$context['edit'] && $smcFunc['db_num_rows']($request) != 0;]]></search>
+		<add><![CDATA[$isReceived = !isset($context['edit']) && $smcFunc['db_num_rows']($request) != 0;]]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- Incorrect image assigned to Outbox PMs - reported by FragaCampos       -->
+<!---------------------------------------------------------------------------->
+<file name="$themedir/PersonalMessage.template.php">
+	<operation>
+		<search position="replace"><![CDATA[$context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'outbox']]></search>
+		<add><![CDATA[$context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'unread']]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Bug Fix in Manage Rules UI allowing user to assign 2 actions to 1 PM   -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
+		<add><![CDATA[<span id="actionAddHere"></span><br />';
+//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+	echo ']]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Mail Image Tooltips requested by FragaCampos                           -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+]]></search>
+		<add><![CDATA[$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" title="' . $txt['pm_read'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_unread'] . '" title="' . $txt['pm_unread'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';]]></add>
+]]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- Mail Image Tooltips requested by FragaCampos                           -->
+<!---------------------------------------------------------------------------->
+<file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+]]></search>
+		<add><![CDATA[$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" title="' . $txt['pm_read'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_unread'] . '" title="' . $txt['pm_unread'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" title="' . $txt['pm_replied'] . '" />';]]></add>
+]]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Bug Fix in Manage Rules UI allowing user to assign 2 actions to 1 PM   -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
+					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
+		<add><![CDATA[<span id="actionAddHere"></span><br />';
+//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
+	echo ']]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- English Language String Additions (PersonalMessage.english.php)        -->
+<!---------------------------------------------------------------------------->
+<file name="$languagedir/PersonalMessage.english.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_read'] = 'Read';]]></search>
+		<add><![CDATA[$txt['pm_unread'] = 'Unread';
+$txt['pm_read'] = 'Read';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';]]></search>
+		<add><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
+$txt['pm_search_what'] = 'Search group';]]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- English Language String Additions (PersonalMessage.english-utf8.php)   -->
+<!---------------------------------------------------------------------------->
+<file name="$languagedir/PersonalMessage.english-utf8.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_read'] = 'Read';]]></search>
+		<add><![CDATA[$txt['pm_unread'] = 'Unread';
+$txt['pm_read'] = 'Read';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';]]></search>
+		<add><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
+$txt['pm_search_what'] = 'Search group';]]></add>
+	</operation>
+</file>
+
+</modification>
