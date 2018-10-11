@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.8[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v3.0[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -13,12 +13,13 @@ This mod adds settings in the "Features and Options" page.  By default, this mod
 
 Version 2.0 sports an enhanced PM search system, which allows you to search Sent Items and the Outbox for PMs you specify.  It also allows the user to search them by username, just like the core functionality provided for the Inbox.  You are allowed to move PMs to folders for Inbox PMs, and allowed to delete PMs from all folders.
 
+Version 3.0 adds the PM Quick Reply box, as well as changes some options to membergroup permissions....
+
 As a anti-spam measure, this mod can block new members from sending PMs during the 24-hour period after their account is activated.  Please note that members activated before this mod is installed will not be affected by this anti-spam measure, as the activation time is not recorded in the database prior to this mod.
 
 [color=blue][b][size=12pt][u]Related Discussions[/u][/size][/b][/color]
 o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=420396]PM Separate List and View Request[/url]
 o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a Copy[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url]
 o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=426840]Private Message Email Notification[/url]
 o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=128571]PM outbox/sent like phpbb[/url]
 o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=29990]Unsend PM[/url]
@@ -31,6 +32,8 @@ o [DONE] [b]NEW FOR V2.0:[/b] [url=http://www.simplemachines.org/community/index
 o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412263]Allow Members to Send PM's While Muted[/url]
 o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412757]PM Message Rules - Members can avoid Admin PMs & Warning PMs[/url]
 o [DONE] [b]NEW FOR V2.2:[/b] [url=http://www.simplemachines.org/community/index.php?topic=503208.msg3539234#msg3539234]A "Quote to All" in PM Conversation mode?[/url]
+o [DONE] [b]NEW FOR V3.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3804931#msg3804931]PM Quick Reply[/url]
+o [INCOMPLETE] [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url]
 
 [color=blue][b][size=12pt][u]Permission Notices[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=261314]MLM[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a copy[/url] discussion.
@@ -40,7 +43,7 @@ o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]
 o [url=http://code.google.com/p/ultimate-gnome/]Ultimate Gnome[/url] iconset (released under a GPL license) found at [url=http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome]IconFinder.com[/url]
 
 [color=blue][b][size=12pt][u]Compatibility Notes[/u][/size][/b][/color]
-This mod was tested on SMF 2.0.8, and may work on SMF 2.0 and later.  SMF 1.x is not and will not be supported!
+This mod was tested on SMF 2.0.9, but should work on SMF 2.1 Beta 1, as well as SMF 2.0 and up.  SMF 1.x is not and will not be supported.
 
 The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments[/url] mod should be installed first to avoid any conflict with this mod.
 
@@ -56,9 +59,6 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url] - Portuguese_pt and Portuguese_pt-UTf8 translation
-
-[color=blue][b][size=12pt][u]Upgradability[/u][/size][/b][/color]
-Upgrade is possible from [b]v2.0 and up[/b] to this version.
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=8.msg133#msg133]XPtsp.com[/url].

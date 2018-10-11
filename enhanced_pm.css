@@ -1,0 +1,29 @@
+/* Styles for SMF 2.0.x (shouldn't conflict with SMF 2.1.x)
+------------------------------------------------------- */
+ul.quickbuttons li.unsend_button
+{
+	background: url(../images/buttons/eps_mail_unsend.png) no-repeat 0 0;
+}
+ul.quickbuttons li.edit_button
+{
+	background: url(../images/buttons/modify.gif) no-repeat 0 0;
+}
+
+/* Styles for SMF 2.1.x (shouldn't conflict with SMF 2.0.x)
+------------------------------------------------------- */
+.generic_icons.mail_read
+{
+	background: url(../images/buttons/eps_mail_read.png) no-repeat;
+}
+.generic_icons.mail_unread
+{
+	background: url(../images/buttons/eps_mail_unread.png) no-repeat;
+}
+.generic_icons.mail_reply
+{
+	background: url(../images/buttons/eps_mail_unread.png) no-repeat;
+}
+.generic_icons.unsend_button
+{
+	background: url(../images/buttons/eps_mail_unsend.png) no-repeat 0 0;
+}

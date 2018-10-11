@@ -5,39 +5,63 @@
 	<id>Dougiefresh:Enhanced_PM_System</id>
 	<name>Enhanced PM System</name>
 	<type>modification</type>
-	<version>2.8</version>
+	<version>3.0</version>
 
 	<install for="2.0 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
+		<code>add_remove_hooks.php</code>
 		<database>edit_db.php</database>
-		<modification type="file">install.xml</modification>
-		<modification type="file">language_english.xml</modification>
-		<modification type="file">language_english-utf8.xml</modification>
-		<modification type="file">language_english_british.xml</modification>
-		<modification type="file">language_english_british-utf8.xml</modification>
-		<modification type="file">language_portuguese_pt.xml</modification>
-		<modification type="file">language_portuguese_pt-utf8.xml</modification>
+		<modification type="file">install_20x.xml</modification>
+		<require-file name="Subs-EnhancedPM.php" destination="$sourcedir" />
+		<require-file name="EnhancedPMSystem.english.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.english-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="enhanced_pm.css" destination="$themedir/css" />
 		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
 		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
 		<require-file name="eps_mail_unread.png" destination="$imagesdir/buttons" />
 		<require-file name="eps_mail_unsend.png" destination="$imagesdir/buttons" />
+		<redirect timeout="5000" url="?action=admin;area=modsettings;sa=eps" />
 	</install>
 	<uninstall for="2.0 - 2.0.99">
 		<readme parsebbc="true">uninstall.txt</readme>
-		<modification type="file" reverse="true">install.xml</modification>
-		<modification type="file" reverse="true">language_english.xml</modification>
-		<modification type="file" reverse="true">language_english-utf8.xml</modification>
-		<modification type="file" reverse="true">language_english_british.xml</modification>
-		<modification type="file" reverse="true">language_english_british-utf8.xml</modification>
-		<modification type="file" reverse="true">language_portuguese_pt.xml</modification>
-		<modification type="file" reverse="true">language_portuguese_pt-utf8.xml</modification>
+		<code>add_remove_hooks.php</code>
+		<modification type="file" reverse="true">install_20x.xml</modification>
+		<remove-file name="$sourcedir/Subs-EnhancedPM.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english-utf8.php" />
+		<remove-file name="$themedir/css/enhanced_pm.css" />
 		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
 	</uninstall>
 
-	<upgrade from="2.6 - 2.7">
-		<modification>upgrade_2.8.xml</modification>
-	</upgrade>
+	<install for="2.1 Beta 1">
+		<readme parsebbc="true">readme.txt</readme>
+		<code>add_remove_hooks.php</code>
+		<database>edit_db.php</database>
+		<modification type="file">install_21x.xml</modification>
+		<require-file name="Subs-EnhancedPM.php" destination="$sourcedir" />
+		<require-file name="EnhancedPMSystem.english.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.english-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="enhanced_pm.css" destination="$themedir/css" />
+		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unread.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unsend.png" destination="$imagesdir/buttons" />
+		<redirect timeout="5000" url="?action=admin;area=modsettings;sa=eps" />
+	</install>
+	<uninstall for="2.1 Beta 1">
+		<readme parsebbc="true">uninstall.txt</readme>
+		<code>add_remove_hooks.php</code>
+		<modification type="file" reverse="true">install_21x.xml</modification>
+		<remove-file name="$sourcedir/Subs-EnhancedPM.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english-utf8.php" />
+		<remove-file name="$themedir/css/enhanced_pm.css" />
+		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
+	</uninstall>
 </package-info>

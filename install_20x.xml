@@ -5,6 +5,44 @@
 <version>2.8</version>
 
 <!-------------------------------------------------------------------------->
+<!-- Permission modifications (Help.php)                                  -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/Help.php">
+	<operation>
+		<search position="replace"><![CDATA[loadLanguage('Help');]]></search>
+		<add><![CDATA[loadLanguage('Help+EnhancedPMSystem');]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/ManagePermissions.php">
+	<operation>
+		<search position="after"><![CDATA['approve_posts',
+	);
+}
+
+// Present a nice way of applying post moderation.]]></search>
+		<add><![CDATA['eps_allow_edit',
+		'eps_allow_unsend',
+		'eps_block_1st_day',
+		]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
+<!-- Profile modification to show PM Quick Reply area                     -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/Profile.php">
+	<operation>
+		<search position="replace"><![CDATA[if (empty($post_errors))
+		loadLanguage('Profile');]]></search>
+		<add><![CDATA[if (empty($post_errors))
+	{
+		loadLanguage('Profile');
+		loadLanguage('EnhancedPMSystem');
+	}]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
 <!-- If enabled, allow muted members to send Personal Messages            -->
 <!-------------------------------------------------------------------------->
 <file name="$sourcedir/Security.php">
@@ -19,24 +57,6 @@
 		<add><![CDATA[
 		if (!isset($modSettings['eps_send_pm_while_muted']) || !$modSettings['eps_send_pm_while_muted'])
 			$denied_permissions[] = 'pm_send';]]></add>
-	</operation>
-</file>
-
-<!-------------------------------------------------------------------------->
-<!-- PM Settings section (ManageSettings.php)                             -->
-<!-------------------------------------------------------------------------->
-<file name="$sourcedir/ManageSettings.php">
-	<operation>
-		<search position="replace"><![CDATA[array('check', 'disallow_sendBody'),]]></search>
-		<add><![CDATA[array('check', 'disallow_sendBody'),
-
-			// Enhanced PM System setting for allowing users to select view
-			array('title', 'eps_title'),
-			array('check', 'eps_pm_view_switch'),
-			array('check', 'eps_deny_unsend'),
-			array('check', 'eps_deny_edit'),
-			array('check', 'eps_block_1st_day'),
-			array('check', 'eps_send_pm_while_muted'),]]></add>
 	</operation>
 </file>
 
@@ -187,10 +207,6 @@
 	$context['page_title'] = $txt[ $context['edit'] ? 'edit_message' : 'send_message' ];
 
 	]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[if ($context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></search>
-		<add><![CDATA[if (!isset($context['can_edit_msg']) && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$isReceived = $smcFunc['db_num_rows']($request) != 0;]]></search>
@@ -385,28 +401,32 @@ function UnsendMessage()
 				$context['pm_edit'] = true;
 				break;
 		}
-	}]]></add>
+	}
+
+	// Cache a few permission-based PM settings:
+	$context['eps'] = array(
+		'eps_allow_edit' => allowedTo('eps_allow_edit'),
+		'eps_allow_unsend' => allowedTo('eps_allow_unsend'),
+		'eps_block_1st_day' => allowedTo('eps_block_1st_day'),
+	);]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[if (!empty($context['send_log']) && empty($context['send_log']['failed']))
-		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';]]></search>
-		<add><![CDATA[if (!empty($context['send_log']) && empty($context['send_log']['failed']))
-		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=' . (!isset($_REQUEST['edit']) ? 'sent' : 'edit');]]></add>
+		<search position="replace"><![CDATA[$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';]]></search>
+		<add><![CDATA[$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=' . (!isset($_REQUEST['edit']) ? 'sent' : 'edit');]]></add>
 	</operation>
 
 <!-------------------------------------------------------------------------->
 <!-- Seperation of PM topics and views (PersonalMessage.php)              -->
 <!-------------------------------------------------------------------------->
 	<operation>
-		<search position="replace"><![CDATA[// Preferences...]]></search>
+		<search position="replace"><![CDATA[// Preferences...
+	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;]]></search>
 		<add><![CDATA[// Set the PM view to conversation mode unless admin settings allow users to select a different view:
 	if (empty($modSettings['eps_pm_view_switch']))
 	{
 		$context['display_mode'] = 2;
 		unset($_GET['view']);
-	}
-
-	// Preferences...]]></add>
+	}]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
@@ -417,7 +437,7 @@ function UnsendMessage()
 			{
 				$labels[] = $to_label[$row['id_pm']];
 				// Floydpink INSERT - Remove existing label so that message is moved rather than copied
-				//unset($labels[0]);
+				unset($labels[0]);
 			}]]></add>
 	</operation>
 	<operation>
@@ -451,12 +471,6 @@ function UnsendMessage()
 		<search position="before"><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!]]></search>
 		<add><![CDATA[
 	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[// Preferences...
-	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;
-]]></search>
-		<add><![CDATA[// Preferences...]]></add>
 	</operation>
 
 <!-------------------------------------------------------------------------->
@@ -776,6 +790,7 @@ function UnsendMessage()
 				'not_read' => 0,]]></add>
 	</operation>
 	<operation>
+	<operation>
 		<search position="replace"><![CDATA[if ($context['folder'] == 'sent' || empty($row['bcc']))
 				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
 
@@ -837,7 +852,7 @@ function UnsendMessage()
 					'label' => $txt['new_message'],
 					'custom_url' => $scripturl . '?action=pm;sa=send',
 					'permission' => allowedTo('pm_send'),
-					'enabled' => !empty($modSettings['eps_block_1st_day']) && !empty($user_settings['activation_time']) ? ($user_settings['activation_time'] < time() - 86400) : true,
+					'enabled' => !empty($context['eps']['eps_block_1st_day']) && !empty($user_settings['activation_time']) ? ($user_settings['activation_time'] < time() - 86400) : true,
 				),]]></add>
 	</operation>
 	<operation>
@@ -916,8 +931,8 @@ function UnsendMessage()
 
 	isAllowedTo('pm_send');
 
-	loadLanguage('PersonalMessage');
-	if (!empty($modSettings['eps_block_1st_day']) && !empty($user_settings['activation_time']) && ($user_settings['activation_time'] > time() - 86400))
+	loadLanguage('PersonalMessage+EnhancedPMSystem');
+	if (!empty($context['eps']['eps_block_1st_day']) && !empty($user_settings['activation_time']) && ($user_settings['activation_time'] > time() - 86400))
 		fatal_lang_error('pm_send_blocked', false);
 ]]></add>
 	</operation>
@@ -1228,7 +1243,7 @@ function UnsendMessage()
 	<operation>
 		<search position="before"><![CDATA['not_hidden' => 0,]]></search>
 		<add><![CDATA[
-			'admin_group' => (!isset($modSettings['eps_allow_block_admin']) || !$modSettings['eps_allow_block_admin'] ? 1 : 0),]]></add>
+			'admin_group' => (isset($modSettings['eps_allow_block_admin']) && !empty($modSettings['eps_allow_block_admin']) ? 0 : 1),]]></add>
 	</operation>
 
 <!---------------------------------------------------------------------------->
@@ -1265,6 +1280,114 @@ function UnsendMessage()
 		redirectexit('action=pm;pmid=' . $lastData['id'] . (isset($_GET['kstart']) ? ';kstart' : '') . (isset($_GET['f']) ? ';f=' . $tmparr['f'] : '') . (isset($_GET['start']) ? ';start=' . $tmparr['start'] : '') . (isset($_GET['sort']) ? ';sort=' . $tmparr['sort'] : '') . (isset($tmparr['pmid']) ? '#msg' . $tmparr['pmid'] : ''));
 	elseif ($context['display_mode'] == 2 && !empty($pmID) && $pmID != $lastData['id'])
 		fatal_lang_error('no_access', false);]]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Language file loader additions                                         -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[require_once($sourcedir . '/Subs-Post.php');
+
+	loadLanguage('PersonalMessage');]]></search>
+		<add><![CDATA[require_once($sourcedir . '/Subs-Post.php');
+
+	loadLanguage('PersonalMessage+EnhancedPMSystem');
+	loadTemplate(false, 'enhanced_pm');]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[require_once($sourcedir . '/Subs-Auth.php');
+
+	loadLanguage('PersonalMessage', '', false);]]></search>
+		<add><![CDATA[require_once($sourcedir . '/Subs-Auth.php');
+
+	loadLanguage('PersonalMessage+EnhancedPMSystem', '', false);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[loadLanguage('PersonalMessage', $cur_language, false);]]></search>
+		<add><![CDATA[loadLanguage('PersonalMessage+EnhancedPMSystem', $cur_language, false);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!empty($modSettings['userLanguage']))
+			loadLanguage('PersonalMessage', '', false);]]></search>
+		<add><![CDATA[if (!empty($modSettings['userLanguage']))
+			loadLanguage('PersonalMessage+EnhancedPMSystem', '', false);]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Fixes for "Gotta make the Complete Results part of PM Search pretty" -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="before"><![CDATA['recipients' => &$recipients[$row['id_pm']],]]></search>
+		<add><![CDATA[
+				'number_recipients' => count($recipients[$row['id_pm']]['to']),]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[$memberContext[$row['id_member_from']]['is_guest'] = true;
+			}]]></search>
+		<add><![CDATA[
+			else
+			{
+				$memberContext[$row['id_member_from']]['can_view_profile'] = allowedTo('profile_view_any') || ($row['id_member_from'] == $user_info['id'] && allowedTo('profile_view_own'));
+				$memberContext[$row['id_member_from']]['can_see_warning'] = !isset($context['disabled_fields']['warning_status']) && $memberContext[$row['id_member_from']]['warning_status'] && ($context['user']['can_mod'] || (!empty($modSettings['warning_show']) && ($modSettings['warning_show'] > 1 || $row['id_member_from'] == $user_info['id'])));
+			}]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- PM Quick Reply additions                                             -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="before"><![CDATA[global $txt, $scripturl, $modSettings, $context, $subjects_request]]></search>
+		<add><![CDATA[, $sourcedir]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[$messages_request = $smcFunc['db_query']('', '
+			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name]]></search>
+		<add><![CDATA[, pm.id_pm_head]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[}
+
+// Get a personal message for the theme.  (used to save memory.)]]></search>
+		<add><![CDATA[// Edit: Extract out the spam settings - cause it's neat.
+	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
+
+	// Edit: Check whether we need to show the code again.
+	$context['require_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
+	if ($context['require_verification'])
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$verificationOptions = array(
+			'id' => 'pm',
+		);
+		$context['require_verification'] = create_control_verification($verificationOptions);
+		$context['visual_verification_id'] = $verificationOptions['id'];
+	}
+
+	// Edit: No check for the previous submission is needed.
+	checkSubmitOnce('free');
+
+	// Edit: Acquire a new form sequence number.
+	checkSubmitOnce('register');
+]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[return $output;
+}]]></search>
+		<add><![CDATA[// Get some information for the PM Quick Reply form:
+	if (!isset($context['pm_quick_reply']))
+	{
+		$context['pm_quick_reply'] = array(
+			'pm_head' => $message['id_pm_head'],
+			'subject' => $message['subject'],
+		);
+	}
+	if ($message['id_member_from'] != $user_info['id'])
+	{
+		$context['pm_quick_reply']['recipients'][$message['id_member_from']] = $output['member']['name'];
+		$context['pm_quick_reply']['id'] = $output['id'];
+	}
+	
+	]]></add>
 	</operation>
 </file>
 
@@ -1381,10 +1504,10 @@ function UnsendMessage()
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
-						if (empty($modSettings['eps_deny_unsend']))
+						if (!empty($context['eps']['eps_allow_unsend']))
 							echo '
 							<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
-						if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+						if (!empty($context['eps']['eps_allow_edit']))
 							echo '
 							<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
 					}]]></add>
@@ -2042,10 +2165,10 @@ function template_folder_actions()
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
-						if (empty($modSettings['eps_deny_unsend']))
+						if (!empty($context['eps']['eps_allow_unsend']))
 							echo '
 										<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
-						if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+						if (!empty($context['eps']['eps_allow_edit']))
 							echo '
 										<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
 					}
@@ -2116,7 +2239,92 @@ function template_folder_actions()
 		</table>';
 		}]]></add>
 	</operation>		
-</file>
+
+<!-------------------------------------------------------------------------->
+<!-- PM Quick Reply additions                                             -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="after"><![CDATA[}
+
+// Just list all the personal message subjects - to make templates easier.]]></search>
+		<add><![CDATA[
+	// Show the quick-reply box for PMs:
+	if ($context['can_send_pm'] && !empty($options['display_pm_quick_reply']))
+	{
+		echo '
+<br />
+<a id="quickreply"></a>
+<div class="tborder" id="quickreplybox">
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<span class="ie6_header floatleft"><a href="javascript:oQuickReply.swap();">
+				<img src="', $settings['images_url'], '/', $options['display_pm_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" class="icon" />
+			</a>
+			<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
+			</span>
+		</h3>
+	</div>
+	<div id="quickReplyOptions"', $options['display_pm_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe">
+			<p class="smalltext lefttext">', $txt['quick_reply_desc'], '</p>
+			<form action="', $scripturl, '?action=pm;sa=send2;pmsg=', !empty($context['pm_quick_reply']['id']) ? $context['pm_quick_reply']['id'] : 0, '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
+				<div style="display: none">
+					<input type="text" name="subject" value="', $context['pm_quick_reply']['subject'], '" tabindex="', $context['tabindex']++, '" size="60" maxlength="60" />
+				</div>
+				<div class="quickReplyContent">
+					<textarea cols="600" rows="7" name="message" tabindex="', $context['tabindex']++, '"></textarea>
+				</div>';
+
+		// Require an image to be typed to save spamming?
+		if ($context['require_verification'])
+		{
+			echo '
+				<div class="post_verification">
+					<strong>', $txt['pm_visual_verification_label'], ':</strong>
+					', template_control_verification($context['visual_verification_id'], 'all'), '
+				</div>';
+		}
+		
+		echo '
+				<div class="righttext padding">
+					<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" class="button_submit" />
+					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" class="button_submit" />
+				</div>
+				<input type="hidden" name="to" id="to_control" value="', empty($context['pm_quick_reply']['recipients']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['pm_quick_reply']['recipients']) . '&quot;', '" />
+				<input type="hidden" name="bcc" id="bcc_control" value="" />
+				<input type="hidden" name="outbox" id="outbox" value="1" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+				<input type="hidden" name="replied_to" value="', !empty($context['pm_quick_reply']['id']) ? $context['pm_quick_reply']['id'] : 0, '" />
+				<input type="hidden" name="pm_head" value="', !empty($context['pm_quick_reply']['pm_head']) ? $context['pm_quick_reply']['pm_head'] : 0, '" />
+				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
+				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
+			</form>
+		</div>
+		<span class="lowerframe"><span></span></span>
+	</div>
+</div>
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?fin20"></script>
+<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/topic.js"></script>
+<script type="text/javascript"><!-- // --><![CDATA[<]]><![CDATA[![CDATA[
+	var oQuickReply = new QuickReply({
+		bDefaultCollapsed: ', !empty($options['display_pm_quick_reply']) && $options['display_pm_quick_reply'] == 2 ? 'false' : 'true', ',
+		iTopicId: 0,
+		iStart: 0,
+		sScriptUrl: smf_scripturl,
+		sImagesUrl: "', $settings['images_url'], '",
+		sContainerId: "quickReplyOptions",
+		sImageId: "quickReplyExpand",
+		sImageCollapsed: "collapse.gif",
+		sImageExpanded: "expand.gif",
+		sJumpAnchor: "quickreply"
+	});
+// ]]]]><![CDATA[></script>';
+	}
+]]></add>
+	</operation>
+</file>		
 
 <!-------------------------------------------------------------------------------->
 <!-- Curve PM Template edits (PersonalMessage.template.php)                     -->
@@ -2141,14 +2349,14 @@ function template_folder_actions()
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
 					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>]]></search>
-		<add><![CDATA[$which = $txt[ $context['edit'] ? 'edit_message' : 'new_message' ];
+		<add><![CDATA[$which = $txt[ isset($context['edit']) ? 'edit_message' : 'new_message' ];
 	echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
@@ -2252,14 +2460,14 @@ function template_folder_actions()
 						echo '
 					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
 					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>
-					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $txt['quote_to_all'], '</a></li>';
+					' . !empty($message['recipients']['to']) ? count($message['recipients']['to']) != 1 ? '<li class="quote_button"><a href="' . $scripturl . '?action=pm;sa=send;f=' . ($context['folder'] . $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . ';pmsg=' . $message['id'] . ';quote;u=all">' . $txt['quote_to_all'] . '</a></li>' : '' : '';
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
-						if (empty($modSettings['eps_deny_unsend']))
+						if (!empty($context['eps']['eps_allow_unsend']))
 							echo '
 					<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
-						if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+						if (!empty($context['eps']['eps_allow_edit']))
 							echo '
 					<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
 					}
@@ -2655,7 +2863,7 @@ function template_folder_actions()
 		// We showing it all?
 		if (!empty($context['search_params']['show_complete']))
 		{
-			$window_class = $message['alternate'] == 0 ? 'windowbg' : 'windowbg2';
+			$window_class = $alternate ? 'windowbg' : 'windowbg2';
 
 			echo '
 		<script type="text/javascript"><!-- // --><![CDATA[<]]><![CDATA[![CDATA[
@@ -2894,10 +3102,10 @@ function template_folder_actions()
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
-						if (empty($modSettings['eps_deny_unsend']))
+						if (!empty($context['eps']['eps_allow_unsend']))
 							echo '
 						<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
-						if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+						if (!empty($context['eps']['eps_allow_edit']))
 							echo '
 						<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
 					}
@@ -2928,7 +3136,7 @@ function template_folder_actions()
 			echo '
 							};
 						// ]]]]><![CDATA[></script>
-						<input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" />';
+						<input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '" onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" />';
 
 			echo '
 					</ul>
@@ -2978,6 +3186,90 @@ function template_folder_actions()
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- PM Quick Reply additions                                             -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="after"><![CDATA[}
+
+// Just list all the personal message subjects - to make templates easier.]]></search>
+		<add><![CDATA[
+	// Show the quick-reply box for PMs:
+	if ($context['can_send_pm'] && !empty($options['display_pm_quick_reply']))
+	{
+		echo '
+<a id="quickreply"></a>
+<div class="tborder" id="quickreplybox">
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<span class="ie6_header floatleft"><a href="javascript:oQuickReply.swap();">
+				<img src="', $settings['images_url'], '/', $options['display_pm_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" class="icon" />
+			</a>
+			<a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a>
+			</span>
+		</h3>
+	</div>
+	<div id="quickReplyOptions"', $options['display_pm_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<span class="upperframe"><span></span></span>
+		<div class="roundframe">
+			<p class="smalltext lefttext">', $txt['quick_reply_desc'], '</p>
+			<form action="', $scripturl, '?action=pm;sa=send2;pmsg=', !empty($context['pm_quick_reply']['id']) ? $context['pm_quick_reply']['id'] : 0, '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
+				<div style="display: none">
+					<input type="text" name="subject" value="', $context['pm_quick_reply']['subject'], '" tabindex="', $context['tabindex']++, '" size="60" maxlength="60" />
+				</div>
+				<div class="quickReplyContent">
+					<textarea cols="600" rows="7" name="message" tabindex="', $context['tabindex']++, '"></textarea>
+				</div>';
+
+		// Require an image to be typed to save spamming?
+		if ($context['require_verification'])
+		{
+			echo '
+				<div class="post_verification">
+					<strong>', $txt['pm_visual_verification_label'], ':</strong>
+					', template_control_verification($context['visual_verification_id'], 'all'), '
+				</div>';
+		}
+		
+		echo '
+				<div class="righttext padding">
+					<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="', $context['tabindex']++, '" class="button_submit" />
+					<input type="submit" name="preview" value="', $txt['preview'], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="', $context['tabindex']++, '" class="button_submit" />
+				</div>
+				<input type="hidden" name="to" id="to_control" value="', empty($context['pm_quick_reply']['recipients']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['pm_quick_reply']['recipients']) . '&quot;', '" />
+				<input type="hidden" name="bcc" id="bcc_control" value="" />
+				<input type="hidden" name="outbox" id="outbox" value="1" />
+				<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+				<input type="hidden" name="replied_to" value="', !empty($context['pm_quick_reply']['id']) ? $context['pm_quick_reply']['id'] : 0, '" />
+				<input type="hidden" name="pm_head" value="', !empty($context['pm_quick_reply']['pm_head']) ? $context['pm_quick_reply']['pm_head'] : 0, '" />
+				<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
+				<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
+			</form>
+		</div>
+		<span class="lowerframe"><span></span></span>
+	</div>
+</div>
+<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/PersonalMessage.js?fin20"></script>
+<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/topic.js"></script>
+<script type="text/javascript"><!-- // --><![CDATA[<]]><![CDATA[![CDATA[
+	var oQuickReply = new QuickReply({
+		bDefaultCollapsed: true,
+		iTopicId: 0,
+		iStart: 0,
+		sScriptUrl: smf_scripturl,
+		sImagesUrl: "', $settings['images_url'], '",
+		sContainerId: "quickReplyOptions",
+		sImageId: "quickReplyExpand",
+		sImageCollapsed: "collapse.gif",
+		sImageExpanded: "expand.gif",
+		sJumpAnchor: "quickreply"
+	});
+// ]]]]><![CDATA[></script>';
+	}
+]]></add>
 	</operation>
 </file>		
 
@@ -3043,27 +3335,20 @@ function template_folder_actions()
 		<add><![CDATA[
 										<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="input_check" />
 								</dd>
+						</dl>
+						<hr />
+						<dl>
+								<dt>
+										<label for="display_pm_quick_reply">', $txt['display_pm_quick_reply'], '</label>
+								</dt>
+								<dd>
+										<select name="default_options[display_pm_quick_reply]" id="display_pm_quick_reply">
+											<option value="0"', empty($context['member']['options']['display_pm_quick_reply']) ? ' selected="selected"' : '', '>', $txt['display_quick_reply1'], '</option>
+											<option value="1"', !empty($context['member']['options']['display_pm_quick_reply']) && $context['member']['options']['display_pm_quick_reply'] == 1 ? ' selected="selected"' : '', '>', $txt['display_quick_reply2'], '</option>
+											<option value="2"', !empty($context['member']['options']['display_pm_quick_reply']) && $context['member']['options']['display_pm_quick_reply'] == 2 ? ' selected="selected"' : '', '>', $txt['display_quick_reply3'], '</option>
+										</select>
+								</dd>
 						</dl>';]]></add>
 	</operation>
 </file>
-
-<!-------------------------------------------------------------------------->
-<!-- CSS edits (index.css)                                                -->
-<!-------------------------------------------------------------------------->
-<file name="$themedir/css/index.css">
-	<operation>
-		<search position="replace"><![CDATA[ul.quickbuttons li.modify_button]]></search>
-		<add><![CDATA[
-ul.quickbuttons li.unsend_button
-{
-	background: url(../images/buttons/eps_mail_unsend.png) no-repeat 0 0;
-}
-ul.quickbuttons li.edit_button
-{
-	background: url(../images/buttons/modify.gif) no-repeat 0 0;
-}
-ul.quickbuttons li.modify_button]]></add>
-	</operation>
-</file>
-
 </modification>

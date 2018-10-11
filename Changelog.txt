@@ -1,3 +1,17 @@
+v3.0 - June 5th 18th, 2015
+o Updated for SMF 2.1 Beta 1.
+o Added dropdown box for PM quick reply options in the PM Settings page.
+o Added PM quick reply form to the PM discussion page.
+o Added missing checkbox for option to disable blocking PMs from admin.
+o Seperated the settings into their own page under Modifications => Enhanced PM.
+o Converted "Deny Edit", "Deny Unsend" and "Block 1st Day" checkboxes into group-based permissions.
+o Moved CSS modifications into their own CSS file.
+o Moved language modifications into their own language file.
+o Incorporated bug fix and quote-to-all functionality change suggested by "Geor'G". ( http://www.simplemachines.org/community/index.php?topic=521508.msg3812946#msg3812946 )
+o Fixed some undefined variable/element errors in the "pretty-fied" Search PM area.
+o Reinserted the "Move PMs into folders" operation back into the SMF 2.0 install file.
+o NOTE: Upgrade not possible from version 2.8 because of language and CSS file changes.
+
 v2.8 - March 5th, 2015
 o Fixed bug where element is used before checking to see if it has been defined yet.
 o Unfixed "bug" in the Manage Rules page that allowed users to assign more than one action to a Rule.
