@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>2.7</version>
+<version>2.8</version>
 
 <!-------------------------------------------------------------------------->
 <!-- If enabled, allow muted members to send Personal Messages            -->
@@ -417,7 +417,7 @@ function UnsendMessage()
 			{
 				$labels[] = $to_label[$row['id_pm']];
 				// Floydpink INSERT - Remove existing label so that message is moved rather than copied
-				unset($labels[0]);
+				//unset($labels[0]);
 			}]]></add>
 	</operation>
 	<operation>
@@ -1134,20 +1134,26 @@ function UnsendMessage()
 	<operation>
 		<search position="after"><![CDATA[// Set the defaults...]]></search>
 		<add><![CDATA[// Remove any recipients that have the current user in their pm ignore list:
-	foreach ($context['recipients']['to'] as $id => $user)
+	if (!empty($context['recipients']['to']))
 	{
-		if (in_array($user_info['id'], $user['pm_ignore_list']))
+		foreach ($context['recipients']['to'] as $id => $user)
 		{
-			$context['send_log']['failed'][] = sprintf($txt['pm_error_ignored_by_user'], $user['name']);
-			unset($context['recipients']['to'][$id]);
+			if (isset($user['pm_ignore_list']) && is_array($user['pm_ignore_list']) && in_array($user_info['id'], $user['pm_ignore_list']))
+			{
+				$context['send_log']['failed'][] = sprintf($txt['pm_error_ignored_by_user'], $user['name']);
+				unset($context['recipients']['to'][$id]);
+			}
 		}
 	}
-	foreach ($context['recipients']['bcc'] as $id => $user)
+	if (!empty($context['recipients']['bcc']))
 	{
-		if (in_array($user_info['id'], $user['pm_ignore_list']))
+		foreach ($context['recipients']['bcc'] as $id => $user)
 		{
-			$context['send_log']['failed'][] = sprintf($txt['pm_error_ignored_by_user'], $user['name']);
-			unset($context['recipients']['bcc'][$id]);
+			if (isset($user['pm_ignore_list']) && is_array($user['pm_ignore_list']) && in_array($user_info['id'], $user['pm_ignore_list']))
+			{
+				$context['send_log']['failed'][] = sprintf($txt['pm_error_ignored_by_user'], $user['name']);
+				unset($context['recipients']['bcc'][$id]);
+			}
 		}
 	}
 
@@ -1266,13 +1272,6 @@ function UnsendMessage()
 <!-- Core PM Template edits (PersonalMessage.template.php)                -->
 <!-------------------------------------------------------------------------->
 <file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
-	<operation>
-		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
-					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
-		<add><![CDATA[<span id="actionAddHere"></span><br />';
-//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
-	echo ']]></add>
-	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if ($context['show_delete'])]]></search>
 		<add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
@@ -2123,13 +2122,6 @@ function template_folder_actions()
 <!-- Curve PM Template edits (PersonalMessage.template.php)                     -->
 <!-------------------------------------------------------------------------------->
 <file name="$themedir/PersonalMessage.template.php">
-	<operation>
-		<search position="replace"><![CDATA[<span id="actionAddHere"></span><br />
-					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>]]></search>
-		<add><![CDATA[<span id="actionAddHere"></span><br />';
-//					<a href="#" onclick="addActionOption(); return false;" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
-	echo ']]></add>
-	</operation>
 	<operation>
 		<search position="replace"><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons))]]></search>
 		<add><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons) && $context['folder'] != 'unread')]]></add>

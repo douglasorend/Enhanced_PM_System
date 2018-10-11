@@ -1,0 +1,94 @@
+v2.8 - March 5th, 2015
+o Fixed bug where element is used before checking to see if it has been defined yet.
+o Unfixed "bug" in the Manage Rules page that allowed users to assign more than one action to a Rule.
+o Unfixed "bug" in function ApplyRules that allowed one PM to be put in multiple folders.
+o POLICY CHANGE: Upgrade only possible from version 2.6 and 2.7.
+
+v2.7 - January 16th, 2015
+o License change to Simplified BSD.  No functionality change.
+
+v2.6 - November 9th, 2014
+o Fixed issue where this mod's language strings were put in the wrong file.
+
+v2.5 - October 19th, 2014
+o Another bug fix to resolve PM display mode not being set to conversation correctly
+
+v2.4 - October 18th, 2014
+o Mod rearranged due to some servers having difficulty processing this mod correctly...
+o Upgrade files now correctly reflect the modifications between each version....
+o 2nd attempt to fix bug that prevents latest message from being shown if more has been added to convo...
+
+v2.3 - September 14th, 2014
+o Mod upgradable from v2.x to v2.3.
+o Fixed bugs that prevented latest message from being shown if more has been added to the conversation.
+o Fixed install bug so that v2.2 operation in core/PersonalMessage.template.php is now ignored if doesn't exist.
+o Fixed uninstaller from v2.2 because it doesn't include reversing the upgrade_2.2.xml instructions.
+
+v2.2 - September 9th, 2014
+o Mod now upgradable from version 2.0 and 2.1 to version 2.2!
+o "Quote to All" feature implemented, requested by SilverWings.
+o Fixed a bug where no Search button was shown while searching when no labels were defined, reported by Jeff B.
+o More bug fixes where the PM display mode not being set to conversation correctly, reported by SilverWings.
+o Fixed a bug that marks PMs as read even though user hasn't opened the PM yet, reported by ExSpirit
+o Re-Added code that v2.1 removed by mistake which removes default subject from PMs (noticed during rebuild)
+o Fixed a template bug in the Core theme's PersonalMessage.template.php.
+
+v2.1 - August 24th, 2014
+o Fixed a bug where a PM message is read by the user and still marked NEW, reported by ExSpirit
+o Fixed a bug where user info is not updated when sent a new PM, reported by ExSpirit
+o Fixed a bug where the PM display mode not being set to conversation correctly, reported by SilverWings
+o Fixed a bug where PMs deleted from Outbox are incorrectly deleted, reported by SilverWings
+o Added option to allow muted members the ability to send PMs.  Thanks, Corelogik!
+o Added option to allow members to not block Admin PMs within the rules.  Thanks, danielwmoore!
+
+v2.0 - July 9th, 2014
+o If user is on recipient's PM ignore list, it is shown upon entering the reply page.
+o Fix for duplicate buttons showing up for PMs in Core theme.
+o Added ability to mass-delete of PMs in the Outbox.
+o Added support for searching Sent Items and Outbox folders for PMs
+o Search results now indicates whether the PMs found have been read or not.
+o Copied PM display code for use by complete search result template...
+o Added ability to mass-delete from all folders during searches.
+o Added ability to mass-move messages from the Inbox and Folders during searches.
+o Added ability to search Sent Items and Outbox PMs by username.
+o Minor reorganization of template code to avoid duplication of necessary functions.
+
+v1.6 - July 2nd, 2014
+o Fix for incorrect Unsend/Edit buttons showing up for PMs.
+o Fix for reporting message sent correctly, instead of message edited
+o Fixes for "Disappearing & Lost PM problem", reported by FragaCampos
+o Mod Updating capability removed because of problems rising from using upgrades...
+
+v1.5 - June 30th, 2014
+o Added support for English-British and English-British UTF8 languages...
+o Seperated English and English-UTF8 language file and fixed UTF8 file...
+o Fixed Portuguese (Portuguese_pt) language files to make sure they install right.
+o Fixed Portuguese (Portuguese_pt) UTF8 language files to make sure they install right.
+o Reinstating missing problem & fix from v1.1 from install.xml....
+o Reversed undefined variable error fix from v1.4 because of missing problem/fix from v1.1....
+o Fixed incorrect image assigned to Outbox PMs in install.xml.  upgrade_1.4.xml had correct patch.
+o Fixed a "bug" in function ApplyRules that allowed one PM to be put in multiple folders.
+o Fixed an incompatibility with latest version of PM Attachment that results in install error.
+
+v1.4 - June 29th, 2014
+o Moved language modifications into seperate file for ease of translation.  (No effect on install)
+o Added forgotten English UTF8 text to the installer for completeness.
+o Added Portuguese (Portuguese_pt) language file to the mix.  Thanks, FragaCampos!!!
+o Fixed incorrect image assigned to Outbox PMs.  Thanks, FragaCampos!
+o Fixed an undefined variable error, reported by FragaCampos
+o Added Mail Image tooltips, as requested by FragaCampos
+o Fixed a "bug" in the Manage Rules page that allowed users to assign more than one action to a Rule
+
+v1.3 - June 22nd, 2014
+o Fixed a few SQL errors based on the INNER JOIN clauses resulting in cross joins.  Thanks, butch2k!
+
+v1.2 - June 8th, 2014
+o Fixed an undefined variable error found in PersonalMessage.php...
+o Fixed error in uninstaller from v1.1, relating to upgraded installations...
+o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to uninstall...
+
+v1.1 - June 1st, 2014
+o Fixed an error that keeps users from quoting or replying to PMs...  Thanks, etn991!
+
+v1.0 - April 9th, 2014
+o Initial Release of the Mod
