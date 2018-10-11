@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>2.8</version>
+<version>3.1</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -3197,7 +3197,7 @@ function template_folder_actions()
 // Just list all the personal message subjects - to make templates easier.]]></search>
 		<add><![CDATA[
 	// Show the quick-reply box for PMs:
-	if ($context['can_send_pm'] && !empty($options['display_pm_quick_reply']))
+	if ($context['can_send_pm'] && !empty($options['display_pm_quick_reply']) && !empty($context['pm_quick_reply']))
 	{
 		echo '
 <a id="quickreply"></a>
@@ -3217,7 +3217,7 @@ function template_folder_actions()
 			<p class="smalltext lefttext">', $txt['quick_reply_desc'], '</p>
 			<form action="', $scripturl, '?action=pm;sa=send2;pmsg=', !empty($context['pm_quick_reply']['id']) ? $context['pm_quick_reply']['id'] : 0, '" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'subject\', \'message\']);">
 				<div style="display: none">
-					<input type="text" name="subject" value="', $context['pm_quick_reply']['subject'], '" tabindex="', $context['tabindex']++, '" size="60" maxlength="60" />
+					<input type="text" name="subject" value="', (!empty($context['pm_quick_reply']['subject']) ? $context['pm_quick_reply']['subject'] : ''), '" tabindex="', $context['tabindex']++, '" size="60" maxlength="60" />
 				</div>
 				<div class="quickReplyContent">
 					<textarea cols="600" rows="7" name="message" tabindex="', $context['tabindex']++, '"></textarea>
