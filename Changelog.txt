@@ -1,3 +1,7 @@
+v3.5 - December 28th, 2015
+o Added Spanish translation to the mod.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=422971]d3vcho[/url]!
+o Fixed installation issue with UTF8 Brazilian Portuguese language file.
+
 v3.4 - December 2nd, 2015
 o Fixed issue where searching for sent items resulted in error message.
 o Fixed several undefined variable error messages in PersonalMessage.php.
