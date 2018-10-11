@@ -137,7 +137,7 @@
 <!-- Template error fix for Core theme's PersonalMessage.template.php		-->
 <!---------------------------------------------------------------------------->
 <file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
-	<operation>
+	<operation error="ignore">
 		<search position="replace"><![CDATA[echo '
 							if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))]]></search>
 		<add><![CDATA[if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))]]></add>

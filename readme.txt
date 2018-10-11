@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.2[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.3[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -58,12 +58,18 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url] - Portuguese_pt and Portuguese_pt-UTf8 translation
 
 [color=blue][b][size=12pt][u]Upgradability[/u][/size][/b][/color]
-Upgrade is possible from [b]v2.0 and v2.1[/b] to [b]v2.2[/b] ONLY!.
+Upgrade is possible from [b]v2.0 thru v2.2[/b] to [b]v2.3[/b] ONLY!.
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 [quote]
+[u][b]v2.3 - September 14th, 2014[/b][/u]
+o Mod upgradable from v2.x to v2.3.
+o Fixed bugs that prevented latest message from being shown if more has been added to the conversation.
+o Fixed install bug so that v2.2 operation in [b]core/PersonalMessage.template.php[/b] is now ignored if doesn't exist.
+o Fixed uninstaller from v2.2 because it doesn't include reversing the [b]upgrade_2.2.xml[/b] instructions.
+
 [u][b]v2.2 - September 9th, 2014[/b][/u]
-o Mod now upgradable from version 1.0 to version 2.1 to version 2.2!
+o Mod now upgradable from version 2.0 and 2.1 to version 2.2!
 o "Quote to All" feature implemented, requested by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url].
 o Fixed a bug where no Search button was shown while searching when no labels were defined, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=11253]Jeff B[/url].
 o More bug fixes where the PM display mode not being set to conversation correctly, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url].

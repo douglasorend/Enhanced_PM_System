@@ -1242,8 +1242,8 @@ function UnsendMessage()
 		<add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -2113,7 +2113,7 @@ function template_folder_actions()
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
