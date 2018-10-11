@@ -7,10 +7,11 @@
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (English UTF8 - Modifications & PersonalMessage) -->
 <!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.english_british-utf8.php" error="skip">
+<file name="$languagedir/ManageSettings.english_british-utf8.php" error="skip">
 	<operation>
-		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
+		<search position="replace"><![CDATA[// Version: 2.0; ManageSettings]]></search>
 		<add><![CDATA[// Version: 2.0; Modifications
+
 /* Enhanced PM System mod */
 $txt['eps_title'] = 'Enhanced PM System';
 $txt['eps_pm_view_switch'] = 'Allow users to select PM views other than conversation mode';

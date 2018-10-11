@@ -7,10 +7,11 @@
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (Portuguese - Modifications & PersonalMessage)      -->
 <!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.portuguese_pt-utf8.php" error="skip">
+<file name="$languagedir/ManageSettings.portuguese_pt-utf8.php" error="skip">
 	<operation>
-		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
+		<search position="replace"><![CDATA[// Version: 2.0; ManageSettings]]></search>
 		<add><![CDATA[// Version: 2.0; Modifications
+
 /* Enhanced PM System mod */
 $txt['eps_title'] = 'Sistema Melhorado de MPs';
 $txt['eps_pm_view_switch'] = 'Permitir que os utilizadores escolham outras vistas de MPs além do modo de conversação';
