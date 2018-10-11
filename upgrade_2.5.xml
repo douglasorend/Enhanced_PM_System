@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>2.5</version>
+
+<file name="$sourcedir/PersonalMessage.php">
+	<operation error="ignore">
+		<search position="replace"><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!
+	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);
+	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;]]></search>
+		<add><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!
+	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);]]></add>
+	</operation>
+</file>
+</modification>

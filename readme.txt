@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.4[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.5[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -62,6 +62,9 @@ Upgrade is possible from [b]v2.0 and up[/b] to this version.
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 [quote]
+[u][b]v2.5 - October 19th, 2014[/b][/u]
+o Another bug fix to resolve PM display mode not being set to conversation correctly
+
 [u][b]v2.4 - October 18th, 2014[/b][/u]
 o Mod rearranged due to some servers having difficulty processing this mod correctly...
 o Upgrade files now correctly reflect the modifications between each version....

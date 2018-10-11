@@ -450,8 +450,7 @@ function UnsendMessage()
 	<operation>
 		<search position="before"><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!]]></search>
 		<add><![CDATA[
-	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);
-	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;]]></add>
+	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[// Preferences...
