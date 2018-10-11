@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.0[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.1[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -16,22 +16,24 @@ Version 2.0 sports an enhanced PM search system, which allows you to search Sent
 As a anti-spam measure, this mod can block new members from sending PMs during the 24-hour period after their account is activated.  Please note that members activated before this mod is installed will not be affected by this anti-spam measure, as the activation time is not recorded in the database prior to this mod.
 
 [color=blue][b][size=12pt][u]Related Discussions[/u][/size][/b][/color]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=420396.0]PM Separate List and View Request[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=427762.0]Always PM Conversation and Save a Copy[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=295253.0]Move Personal Messages[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=426840.0]Private Message Email Notification[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=128571.0]PM outbox/sent like phpbb[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=29990.0]Unsend PM[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=403840.0]Outbox with editable PMs[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=333117.0]Require Subject for PMs[/url]
-o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=460098.0]Block PM on the first day[/url]
-o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=498600.0]Search by Sent PMs[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=420396]PM Separate List and View Request[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a Copy[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=426840]Private Message Email Notification[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=128571]PM outbox/sent like phpbb[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=29990]Unsend PM[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=403840]Outbox with editable PMs[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=333117]Require Subject for PMs[/url]
+o [DONE] [url=http://www.simplemachines.org/community/index.php?topic=460098]Block PM on the first day[/url]
+o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=498600]Search by Sent PMs[/url]
 o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3713864#msg3713864]Perform Actions on Searched-For PMs[/url]
-o [DONE] [b]NEW FOR V2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=478886.0]"User xx has blocked your personal message."[/url]
+o [DONE] [b]NEW FOR V2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=478886]"User xx has blocked your personal message."[/url]
+o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412263]Allow Members to Send PM's While Muted[/url]
+o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412757]PM Message Rules - Members can avoid Admin PMs & Warning PMs[/url]
 
 [color=blue][b][size=12pt][u]Permission Notices[/u][/size][/b][/color]
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=261314]MLM[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=427762.0]Always PM Conversation and Save a copy[/url] discussion.
-o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]floydpink[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=295253.0]Move Personal Messages[/url] discussion.
+o [url=http://www.simplemachines.org/community/index.php?action=profile;u=261314]MLM[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a copy[/url] discussion.
+o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]floydpink[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=295253]Move Personal Messages[/url] discussion.
 
 [color=blue][b][size=12pt][u]Mail Icons[/u][/size][/b][/color]
 o [url=http://code.google.com/p/ultimate-gnome/]Ultimate Gnome[/url] iconset (released under a GPL license) found at [url=http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome]IconFinder.com[/url]
@@ -54,8 +56,16 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url] - Portuguese_pt and Portuguese_pt-UTf8 translation
 
-[hr]
+[quote]
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[u][b]v2.1 - August 24th, 2014[/b][/u]
+o Fixed a bug where a PM message is read by the user and still marked NEW, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=84861]ExSpirit[/url]
+o Fixed a bug where user info is not updated when sent a new PM, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=84861]ExSpirit[/url]
+o Fixed a bug where the PM display mode not being set to conversation correctly, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url]
+o Fixed a bug where PMs deleted from Outbox are incorrectly deleted, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url]
+o Added option to allow muted members the ability to send PMs.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=181043]Corelogik[/url]!
+o Added option to allow members to not block Admin PMs within the rules.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=221370]danielwmoore[/url]!
+
 [u][b]v2.0 - July 9th, 2014[/b][/u]
 o If user is on recipient's PM ignore list, it is shown upon entering the reply page.
 o Fix for duplicate buttons showing up for PMs in Core theme.
@@ -74,13 +84,40 @@ o Fix for reporting message sent correctly, instead of message edited
 o Fixes for "Disappearing & Lost PM problem", reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
 o Mod Updating capability removed because of problems rising from using upgrades...
 
-[u][b]v1.5 - June 30th, 2014[/b][/u] -> [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3714554#msg3714554]Read here[/url]
-[u][b]v1.4 - June 29th, 2014[/b][/u] -> [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3714181#msg3714181]Read Here[/url]
-[u][b]v1.3 - June 22nd, 2014[/b][/u] -> [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3711546#msg3711546]Read Here[/url]
-[u][b]v1.2 - June 8th, 2014[/b][/u] -> [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3705451#msg3705451]Read Here[/url]
-[u][b]v1.1 - June 1st, 2014[/b][/u] -> [url=http://www.simplemachines.org/community/index.php?topic=521508.msg3702626#msg3702626]Read Here[/url]
-[u][b]v1.0 - April 9th, 2014[/b][/u] -> Initial Release of the Mod
+[u][b]v1.5 - June 30th, 2014[/b][/u]
+o Added support for English-British and English-British UTF8 languages...
+o Seperated English and English-UTF8 language file and fixed UTF8 file...
+o Fixed Portuguese (Portuguese_pt) language files to make sure they install right.
+o Fixed Portuguese (Portuguese_pt) UTF8 language files to make sure they install right.
+o Reinstating missing problem & fix from v1.1 from [b]install.xml[/b]....
+o Reversed undefined variable error fix from v1.4 because of missing problem/fix from v1.1....
+o Fixed incorrect image assigned to Outbox PMs in [b]install.xml[/b].  [b]upgrade_1.4.xml[/b] had correct patch.
+o Fixed a "bug" in function [b]ApplyRules[/b] that allowed one PM to be put in multiple folders.
+o Fixed an incompatibility with latest version of PM Attachment that results in install error.
 
+[u][b]v1.4 - June 29th, 2014[/b][/u]
+o Moved language modifications into seperate file for ease of translation.  (No effect on install)
+o Added forgotten English UTF8 text to the installer for completeness.
+o Added Portuguese (Portuguese_pt) language file to the mix.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]!!!
+o Fixed incorrect image assigned to Outbox PMs.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]!
+o Fixed an undefined variable error, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Added Mail Image tooltips, as requested by [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url]
+o Fixed a "bug" in the [b]Manage Rules[/b] page that allowed users to assign more than one action to a Rule
+
+[u][b]v1.3 - June 22nd, 2014[/b][/u]
+o Fixed a few SQL errors based on the INNER JOIN clauses resulting in cross joins.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=90366]butch2k[/url]!
+
+[u][b]v1.2 - June 8th, 2014[/b][/u]
+o Fixed an undefined variable error found in [b]PersonalMessage.php[/b]...
+o Fixed error in uninstaller from v1.1, relating to upgraded installations...
+o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to uninstall...
+
+[u][b]v1.1 - June 1st, 2014[/b][/u]
+o Fixed an error that keeps users from quoting or replying to PMs...  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=395983]etn991[/url]!
+
+[u][b]v1.0 - April 9th, 2014[/b][/u]
+o Initial Release of the Mod
+[/quote]
 [hr]
-[url=http://creativecommons.org/licenses/by/3.0][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]
-This work is licensed under a [url=http://creativecommons.org/licenses/by/3.0]Creative Commons Attribution 3.0 Unported License[/url]
+[url=http://creativecommons.org/licenses/by/3][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]
+This work is licensed under a [url=http://creativecommons.org/licenses/by/3]Creative Commons Attribution 3.0 Unported License[/url]

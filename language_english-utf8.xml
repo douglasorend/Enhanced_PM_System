@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>1.4</version>
+<version>2.1</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (English UTF8 - Modifications & PersonalMessage) -->
@@ -17,11 +17,18 @@ $txt['eps_pm_view_switch'] = 'Allow users to select PM views other than conversa
 $txt['eps_deny_unsend'] = 'Do not allow users to unsend an unread PM';
 $txt['eps_deny_edit'] = 'Do not allow users to edit an unread PM';
 $txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
+$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';
 /* End Enhanced PM System mod */
 ]]></add>
 	</operation>
 </file>
 <file name="$languagedir/PersonalMessage.english-utf8.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['reply_to_all'] = 'Reply to All';]]></search>
+		<add><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['quote_to_all'] = 'Quote to All';]]></add>
+	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_msg_label_title'] = 'Label Message';
 $txt['pm_msg_label_apply'] = 'Add Label';
