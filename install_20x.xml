@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>3.3</version>
+<version>3.4</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -407,7 +407,7 @@ function UnsendMessage()
 	$context['eps'] = array(
 		'eps_allow_edit' => allowedTo('eps_allow_edit'),
 		'eps_allow_unsend' => allowedTo('eps_allow_unsend'),
-		'eps_block_1st_day' => allowedTo('eps_block_1st_day'),
+		'eps_block_1st_day' => !allowedTo('eps_block_1st_day'),
 	);]]></add>
 	</operation>
 	<operation>
@@ -1261,7 +1261,7 @@ function UnsendMessage()
 
 	// Make sure that we have been given a correct head pm id!
 	if ($context['display_mode'] == 2 && !empty($pmID) && !empty($lastData['id']) && $pmID != $lastData['id'])
-		redirectexit('action=pm;pmid=' . $lastData['id'] . (isset($_GET['kstart']) ? ';kstart' : '') . (isset($_GET['f']) ? ';f=' . $tmparr['f'] : '') . (isset($_GET['start']) ? ';start=' . $tmparr['start'] : '') . (isset($_GET['sort']) ? ';sort=' . $tmparr['sort'] : '') . (isset($tmparr['pmid']) ? '#msg' . $tmparr['pmid'] : ''));
+		redirectexit('action=pm;pmid=' . $lastData['id'] . (isset($_GET['kstart']) ? ';kstart' : '') . (isset($_GET['f']) ? ';f=' . $_GET['f'] : '') . (isset($_GET['start']) ? ';start=' . $_GET['start'] : '') . (isset($_GET['sort']) ? ';sort=' . $_GET['sort'] : '') . (isset($_GET['pmid']) ? '#msg' . $_GET['pmid'] : ''));
 	elseif ($context['display_mode'] == 2 && !empty($pmID) && $pmID != $lastData['id'])
 		fatal_lang_error('no_access', false);]]></add>
 	</operation>

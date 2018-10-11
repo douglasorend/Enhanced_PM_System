@@ -1,3 +1,8 @@
+v3.4 - December 2nd, 2015
+o Fixed issue where searching for sent items resulted in error message.
+o Fixed several undefined variable error messages in PersonalMessage.php.
+o Fixed permission to allow member to send PMs 24 hours after registering.
+
 v3.3 - September 2nd, 2015
 o Removed support for SMF 2.1 Beta 1
 o Added support for SMF 2.1 Beta 2
