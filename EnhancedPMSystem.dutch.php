@@ -84,5 +84,7 @@ if (!isset($txt['display_quick_reply1']))
 	$txt['display_quick_reply2'] = 'tonen, standaard uit';
 	$txt['display_quick_reply3'] = 'tonen, standaard aan';
 }
+//$txt['recent_pms_at_top'] = 'Show most recent conversation at top of list.';
+//$txt['recent_msgs_at_top'] = 'Show most recent personal messages at top.';
 
 ?>

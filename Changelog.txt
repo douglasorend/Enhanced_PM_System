@@ -1,3 +1,8 @@
+v3.2 - August 7th, 2015
+o Modifications made so that it can be installed beside "Slash through Banned Usernames" mod.
+o Changed "most recent personal message" into "most recent conversation" on PM settings page.
+o Added "Show most recent personal messages in conversation at top" to PM settings page.
+
 v3.1.1 - July 6th, 2015
 o Added Dutch translation, courtsey of [url=http://www.simplemachines.org/community/index.php?action=profile;u=287786]@rjen[/url]
 

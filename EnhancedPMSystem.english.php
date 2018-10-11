@@ -84,5 +84,7 @@ if (!isset($txt['display_quick_reply1']))
 	$txt['display_quick_reply2'] = 'show, off by default';
 	$txt['display_quick_reply3'] = 'show, on by default';
 }
+$txt['recent_pms_at_top'] = 'Show most recent conversation at top of list.';
+$txt['recent_msgs_at_top'] = 'Show most recent personal messages in conversation at top.';
 
 ?>

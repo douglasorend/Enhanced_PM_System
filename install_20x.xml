@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>3.1.1</version>
+<version>3.2</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -791,14 +791,12 @@ function UnsendMessage()
 	</operation>
 	<operation>
 	<operation>
-		<search position="replace"><![CDATA[if ($context['folder'] == 'sent' || empty($row['bcc']))
-				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
-
-			if ($row['id_member_to'] == $user_info['id'] && $context['folder'] != 'sent')]]></search>
-		<add><![CDATA[if ($context['folder'] == 'sent' || $context['folder'] == 'unread' || empty($row['bcc']))
-				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
-
-			if ($row['id_member_to'] == $user_info['id'] && ($context['folder'] != 'sent' || $context['folder'] == 'unread'))]]></add>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent' || empty($row['bcc']))]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent' || $context['folder'] == 'unread' || empty($row['bcc']))]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($row['id_member_to'] == $user_info['id'] && $context['folder'] != 'sent')]]></search>
+		<add><![CDATA[if ($row['id_member_to'] == $user_info['id'] && ($context['folder'] != 'sent' || $context['folder'] == 'unread'))]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$context['folder'] = !isset($_REQUEST['f']) || $_REQUEST['f'] != 'sent' ? 'inbox' : 'sent';]]></search>
@@ -1075,9 +1073,22 @@ function UnsendMessage()
 <!-- Notify user if they are on PM ignore list of recipient PM user(s)    -->
 <!-------------------------------------------------------------------------->
 	<operation>
-		<search position="replace"><![CDATA[// Now to get the others.
-			$request = $smcFunc['db_query']('', '
-				SELECT mem.id_member, mem.real_name
+		<search position="replace"><![CDATA[
+				FROM {db_prefix}pm_recipients AS pmr
+					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+				WHERE pmr.id_pm = {int:id_pm}
+					AND pmr.id_member != {int:current_member}
+					AND pmr.bcc = {int:not_bcc}',
+				array(
+					'current_member' => $user_info['id'],
+					'id_pm' => $pmsg,
+					'not_bcc' => 0,
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$context['recipients']['to'][] = array(
+					'id' => $row['id_member'],]]></search>
+		<add><![CDATA[, mem.pm_ignore_list
 				FROM {db_prefix}pm_recipients AS pmr
 					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_pm = {int:id_pm}
@@ -1092,32 +1103,21 @@ function UnsendMessage()
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
-					'name' => $row['real_name'],
-				);]]></search>
-		<add><![CDATA[// Now to get the others.
-			$request = $smcFunc['db_query']('', '
-				SELECT mem.id_member, mem.real_name, mem.pm_ignore_list
-				FROM {db_prefix}pm_recipients AS pmr
-					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
-				WHERE pmr.id_pm = {int:id_pm}
-					AND pmr.id_member != {int:current_member}
-					AND pmr.bcc = {int:not_bcc}',
-				array(
-					'current_member' => $user_info['id'],
-					'id_pm' => $pmsg,
-					'not_bcc' => 0,
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$context['recipients']['to'][] = array(
-					'id' => $row['id_member'],
-					'name' => $row['real_name'],
-					'pm_ignore_list' => explode(',', $row['pm_ignore_list']),
-				);]]></add>
+					'pm_ignore_list' => explode(',', $row['pm_ignore_list']),]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$request = $smcFunc['db_query']('', '
-				SELECT id_member, real_name
+		<search position="replace"><![CDATA[
+				FROM {db_prefix}members
+				WHERE id_member IN ({array_int:member_list})
+				LIMIT ' . count($_REQUEST['u']),
+				array(
+					'member_list' => $_REQUEST['u'],
+				)
+			);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$context['recipients']['to'][] = array(
+					'id' => $row['id_member'],]]></search>
+		<add><![CDATA[, pm_ignore_list
 				FROM {db_prefix}members
 				WHERE id_member IN ({array_int:member_list})
 				LIMIT ' . count($_REQUEST['u']),
@@ -1128,23 +1128,7 @@ function UnsendMessage()
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
-					'name' => $row['real_name'],
-				);]]></search>
-		<add><![CDATA[$request = $smcFunc['db_query']('', '
-				SELECT id_member, real_name, pm_ignore_list
-				FROM {db_prefix}members
-				WHERE id_member IN ({array_int:member_list})
-				LIMIT ' . count($_REQUEST['u']),
-				array(
-					'member_list' => $_REQUEST['u'],
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$context['recipients']['to'][] = array(
-					'id' => $row['id_member'],
-					'name' => $row['real_name'],
-					'pm_ignore_list' => explode(',', $row['pm_ignore_list']),
-				);]]></add>
+					'pm_ignore_list' => explode(',', $row['pm_ignore_list']),]]></add>
 	</operation>
 	<operation>
 		<search position="after"><![CDATA[// Set the defaults...]]></search>
@@ -1341,7 +1325,7 @@ function UnsendMessage()
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[$messages_request = $smcFunc['db_query']('', '
-			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name]]></search>
+			SELECT pm.id_pm]]></search>
 		<add><![CDATA[, pm.id_pm_head]]></add>
 	</operation>
 	<operation>
@@ -1388,6 +1372,21 @@ function UnsendMessage()
 	}
 	
 	]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Seperate setting to list of PMs from conversation from top to bottom -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[if (!is_numeric($_GET['start']) || $_GET['start'] >= $max_messages)]]></search>
+		<add><![CDATA[if (!is_numeric($_GET['start'])) 
+		$_GET['start'] = 0;
+	elseif (!is_numeric($_GET['start']) || $_GET['start'] >= $max_messages)]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[$context['sort_direction'] = $descending ? 'down' : 'up';]]></search>
+		<add><![CDATA[
+	$context['msg_sort_direction'] = !empty($options['view_newest_msg_first']) ? 'down' : 'up';]]></add>
 	</operation>
 </file>
 
@@ -1491,7 +1490,7 @@ function UnsendMessage()
 		<add><![CDATA[
 					', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'unread' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
 				<td>', $message['time'], '</td>
-				<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
+				<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['msg_sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -2449,7 +2448,7 @@ function template_folder_actions()
 		<add><![CDATA[
 				', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'unread' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
 			<td>', $message['time'], '</td>
-			<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
+			<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['msg_sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -3310,6 +3309,17 @@ function template_folder_actions()
 										</select>
 								</dd>';
 	echo ']]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[<input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="input_check" />]]></search>
+		<add><![CDATA[
+								</dd>
+								<dt>
+										<label for="view_newest_msg_first">', $txt['recent_msgs_at_top'], '</label>
+								</dt>
+								<dd>
+										<input type="hidden" name="default_options[view_newest_msg_first]" value="0" />
+										<input type="checkbox" name="default_options[view_newest_msg_first]" id="view_newest_msg_first" value="1"', !empty($context['member']['options']['view_newest_msg_first']) ? ' checked="checked"' : '', ' class="input_check" />]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[
