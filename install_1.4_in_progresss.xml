@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.4</version>
+
+<!-------------------------------------------------------------------------->
+<!-- Search Personal Messages from Sent Items (PersonalMessage.php)       -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[$context['folder'] = 'inbox';]]></search>
+		<add><![CDATA[$context['folder'] = (isset($_REQUEST['search_what']) ? ($_REQUEST['search_what'] == 'inbox' ? 'inbox' : 'sent') : 'inbox');]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/PersonalMessage.template.php">
+	<operation>
+		<search position="replace"><![CDATA[<dt>', $txt['pm_search_order'], ':</dt>]]></search>
+		<add><![CDATA[<dt>', $txt['pm_search_what'], ':</dt>
+					<dd>
+						<select name="search_what">
+							<option value="inbox">', $txt['inbox'], '</option>
+							<option value="sent">', $txt['sent_items'], '</option>
+						</select>
+					</dd>
+					<dt>', $txt['pm_search_order'], ':</dt>]]></add>
+	</operation>
+</file>
+<file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[<dt>', $txt['pm_search_order'], ':</dt>]]></search>
+		<add><![CDATA[<dt>', $txt['pm_search_what'], ':</dt>
+					<dd>
+						<select name="search_what">
+							<option value="inbox">', $txt['inbox'], '</option>
+							<option value="sent">', $txt['sent_items'], '</option>
+						</select>
+					</dd>
+					<dt>', $txt['pm_search_order'], ':</dt>]]></add>
+	</operation>
+</file>
+<file name="$languagedir/PersonalMessage.english.php">
+	<operation>
+		<search position="replace"><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';]]></search>
+		<add><![CDATA[$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
+$txt['pm_search_what'] = 'Search group';]]></add>
+	</operation>
+</file>
+
+</modification>

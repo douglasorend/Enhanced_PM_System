@@ -2,8 +2,11 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>1.1</version>
+<version>1.2</version>
 
+<!-------------------------------------------------------------------------->
+<!--  Fixed an undefined variable error found in PersonalMessage.php...   -->
+<!-------------------------------------------------------------------------->
 <file name="$sourcedir/PersonalMessage.php">
 	<operation>
 		<search position="replace"><![CDATA[if (!$context['can_edit_msg'] && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></search>

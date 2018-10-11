@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.3</version>
+
+<!-------------------------------------------------------------------------->
+<!-- SQL Query Fixes (PersonalMessage.php)                                -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif ($context['folder'] == 'unread')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr]]></search>
+		<add><![CDATA[elseif ($context['folder'] == 'unread')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif ($context['folder'] == 'unread')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr]]></search>
+		<add><![CDATA[elseif ($context['folder'] == 'unread')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)]]></add>
+	</operation>
+</file>
+
+</modification>

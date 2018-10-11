@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.2[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.3[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -39,16 +39,19 @@ At present time, it is not possible to list and/or remove files attached to the 
 At present time, it is not possible to mass-move or mass-delete messages from the outbox.  Future versions of this mod may resolve this issue.
 
 [color=blue][b][size=12pt][u]Upgrade from Previous Version(s)[/u][/size][/b][/color]
-Upgrade is possible from [b]v1.0 and v1.1[/b] to [b]v1.2[/b].
+Upgrade is possible from [b]v1.0 thru v1.2[/b] to [b]v1.3[/b].
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[u][b]v1.3 - June 22nd, 2014[/b][/u]
+o Fixed a few SQL errors based on the INNER JOIN clauses resulting in cross joins.  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=90366]butch2k[/url]!
+
 [u][b]v1.2 - June 8th, 2014[/b][/u]
 o Fixed an undefined variable error found in [b]PersonalMessage.php[/b]...
 o Fixed error in uninstaller from v1.1, relating to upgraded installations...
 o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to uninstall...
 
 [u][b]v1.1 - June 1st, 2014[/b][/u]
-o Fixed an error that keeps users from quoting or replying to PMs...
+o Fixed an error that keeps users from quoting or replying to PMs...  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=395983]etn991[/url]!
 
 [u][b]v1.0 - April 9, 2014[/b][/u]
 o Initial Release of the mod

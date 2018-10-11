@@ -4,6 +4,9 @@
 <id>Dougiefresh:Enhanced_PM_System</id>
 <version>1.1</version>
 
+<!-------------------------------------------------------------------------->
+<!-- Fix to allow users to quote/reply to messages (PersonalMessage.php)  -->
+<!-------------------------------------------------------------------------->
 <file name="$sourcedir/PersonalMessage.php">
 	<operation>
 		<search position="replace"><![CDATA[$context['edit'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['edit']);]]></search>
