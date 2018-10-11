@@ -5,12 +5,13 @@
 	<id>Dougiefresh:Enhanced_PM_System</id>
 	<name>Enhanced PM System</name>
 	<type>modification</type>
-	<version>2.1</version>
+	<version>2.2</version>
 
 	<install for="2.0 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
 		<database>edit_db.php</database>
 		<modification type="file">install.xml</modification>
+		<modification type="file">upgrade_2.2.xml</modification>
 		<modification type="file">language_english.xml</modification>
 		<modification type="file">language_english-utf8.xml</modification>
 		<modification type="file">language_english_british.xml</modification>
@@ -36,4 +37,12 @@
 		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
 		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
 	</uninstall>
+	
+	<upgrade from="2.0">
+		<modification type="file">upgrade_2.1.xml</modification>
+		<modification type="file">upgrade_2.2.xml</modification>
+	</upgrade>
+	<upgrade from="2.1">
+		<modification type="file">upgrade_2.2.xml</modification>
+	</upgrade>
 </package-info>

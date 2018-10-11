@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.1[/b][/size][/color]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v2.2[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
@@ -30,6 +30,7 @@ o [DONE] [b]NEW FOR v2.0:[/b] [url=http://www.simplemachines.org/community/index
 o [DONE] [b]NEW FOR V2.0:[/b] [url=http://www.simplemachines.org/community/index.php?topic=478886]"User xx has blocked your personal message."[/url]
 o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412263]Allow Members to Send PM's While Muted[/url]
 o [DONE] [b]NEW FOR V2.1:[/b] [url=http://www.simplemachines.org/community/index.php?topic=412757]PM Message Rules - Members can avoid Admin PMs & Warning PMs[/url]
+o [DONE] [b]NEW FOR V2.2:[/b] [url=http://www.simplemachines.org/community/index.php?topic=503208.msg3539234#msg3539234]A "Quote to All" in PM Conversation mode?[/url]
 
 [color=blue][b][size=12pt][u]Permission Notices[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=261314]MLM[/url] gave permission to use his changes from [url=http://www.simplemachines.org/community/index.php?topic=427762]Always PM Conversation and Save a copy[/url] discussion.
@@ -56,8 +57,20 @@ The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?action=profile;u=94593]FragaCampos[/url] - Portuguese_pt and Portuguese_pt-UTf8 translation
 
-[quote]
+[color=blue][b][size=12pt][u]Upgradability[/u][/size][/b][/color]
+Upgrade is possible from [b]v2.0 and v2.1[/b] to [b]v2.2[/b] ONLY!.
+
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[quote]
+[u][b]v2.2 - September 9th, 2014[/b][/u]
+o Mod now upgradable from version 1.0 to version 2.1 to version 2.2!
+o "Quote to All" feature implemented, requested by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url].
+o Fixed a bug where no Search button was shown while searching when no labels were defined, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=11253]Jeff B[/url].
+o More bug fixes where the PM display mode not being set to conversation correctly, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=251055]SilverWings[/url].
+o Fixed a bug that marks PMs as read even though user hasn't opened the PM yet, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=84861]ExSpirit[/url]
+o Re-Added code that v2.1 removed by mistake which removes default subject from PMs (noticed during rebuild)
+o Fixed a template bug in the Core theme's PersonalMessage.template.php.
+
 [u][b]v2.1 - August 24th, 2014[/b][/u]
 o Fixed a bug where a PM message is read by the user and still marked NEW, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=84861]ExSpirit[/url]
 o Fixed a bug where user info is not updated when sent a new PM, reported by [url=http://www.simplemachines.org/community/index.php?action=profile;u=84861]ExSpirit[/url]
