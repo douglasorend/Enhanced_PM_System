@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-<id>Dougiefresh:SentItems</id>
+<id>Dougiefresh:Enhanced_PM_System</id>
 <version>2.1</version>
 
 <!---------------------------------------------------------------------------->
@@ -134,45 +134,85 @@
 </file>
 
 <!---------------------------------------------------------------------------->
-<!-- English Language String Additions 										-->
+<!-- English Language String Additions (PersonalMessage)					-->
 <!---------------------------------------------------------------------------->
 <file name="$languagedir/PersonalMessage.english.php">
-	<operation error="ignore">
-		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-/* End Enhanced PM System mod */]]></search>
-		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
-$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';;
-/* End Enhanced PM System mod */]]></add>
+	<operation>
+		<search position="replace"><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></search>
+		<add><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['quote_to_all'] = 'Quote to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></add>
 	</operation>
 </file>
 <file name="$languagedir/PersonalMessage.english-utf8.php" error="skip">
-	<operation error="ignore">
-		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-/* End Enhanced PM System mod */]]></search>
-		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
-$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';;
-/* End Enhanced PM System mod */]]></add>
+	<operation>
+		<search position="replace"><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></search>
+		<add><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['quote_to_all'] = 'Quote to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></add>
 	</operation>
 </file>
 <file name="$languagedir/PersonalMessage.english_british.php" error="skip">
-	<operation error="ignore">
-		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-/* End Enhanced PM System mod */]]></search>
-		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
-$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
-$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';;
-/* End Enhanced PM System mod */]]></add>
+	<operation>
+		<search position="replace"><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></search>
+		<add><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['quote_to_all'] = 'Quote to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></add>
 	</operation>
 </file>
 <file name="$languagedir/PersonalMessage.english_british-utf8.php" error="skip">
-	<operation error="ignore">
+	<operation>
+		<search position="replace"><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></search>
+		<add><![CDATA[$txt['reply_to_all'] = 'Reply to All';
+$txt['quote_to_all'] = 'Quote to All';
+$txt['delete_conversation'] = 'Delete Conversation';]]></add>
+	</operation>
+</file>
+
+<!---------------------------------------------------------------------------->
+<!-- English Language String Additions (Modifications)						-->
+<!---------------------------------------------------------------------------->
+<file name="$languagedir/Modifications.english.php">
+	<operation>
 		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
 /* End Enhanced PM System mod */]]></search>
 		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
 $txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
-$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';;
+$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';
+/* End Enhanced PM System mod */]]></add>
+	</operation>
+</file>
+<file name="$languagedir/Modifications.english-utf8.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+/* End Enhanced PM System mod */]]></search>
+		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
+$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';
+/* End Enhanced PM System mod */]]></add>
+	</operation>
+</file>
+<file name="$languagedir/Modifications.english_british.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+/* End Enhanced PM System mod */]]></search>
+		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
+$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';
+/* End Enhanced PM System mod */]]></add>
+	</operation>
+</file>
+<file name="$languagedir/Modifications.english_british-utf8.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+/* End Enhanced PM System mod */]]></search>
+		<add><![CDATA[$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+$txt['eps_send_pm_while_muted'] = 'Allow muted members to send PMs';
+$txt['eps_allow_block_admin'] = 'Allow members to block Admin PMs in PM rules';
 /* End Enhanced PM System mod */]]></add>
 	</operation>
 </file>

@@ -450,6 +450,7 @@ function UnsendMessage()
 	<operation>
 		<search position="before"><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!]]></search>
 		<add><![CDATA[
+	$context['display_mode'] = WIRELESS ? 0 : (!empty($modSettings['eps_pm_view_switch']) ? $user_settings['pm_prefs'] & 3 : 2);
 	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;]]></add>
 	</operation>
 	<operation>
@@ -480,7 +481,7 @@ function UnsendMessage()
 		$pmID = (int) $_GET['pmid'];
 
 		// Make sure you have access to this PM.
-		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'outbox' : 'inbox'))]]></add>
+		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' ? 'in_or_outbox' : ($context['folder'] == 'unread' ? 'in_or_outbox' : 'inbox')))]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[// Sanitize and validate pmsg variable if set.
@@ -494,7 +495,7 @@ function UnsendMessage()
 	{
 		$pmsg = (int) $_GET['pmsg'];
 
-		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'outbox' : 'inbox'))]]></add>
+		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' ? 'in_or_outbox' : ($context['folder'] == 'unread' ? 'in_or_outbox' : 'inbox')))]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if ($context['folder'] == 'sent')
@@ -1224,6 +1225,42 @@ function UnsendMessage()
 		<add><![CDATA[
 			'admin_group' => (!isset($modSettings['eps_allow_block_admin']) || !$modSettings['eps_allow_block_admin'] ? 1 : 0),]]></add>
 	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Miscellaneous bug fixes, here and there (PersonalMessage.php)			-->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];]]></search>
+		<add><![CDATA[$context['subject'] = $form_subject != '' ? $form_subject : '';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif (!empty($context['current_pm']))]]></search>
+		<add><![CDATA[elseif (!empty($context['current_pm']) && !empty($_GET['pmid']))]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[	$lastData = array(
+				'id' => $row['id_pm'],
+				'head' => $row['id_pm_head'],
+			);
+	}
+	$smcFunc['db_free_result']($request);
+
+	// Make sure that we have been given a correct head pm id!
+	if ($context['display_mode'] == 2 && !empty($pmID) && $pmID != $lastData['id'])
+		fatal_lang_error('no_access', false);]]></search>
+		<add><![CDATA[{
+			$lastData['id'] = $row['id_pm'];
+			$lastData['head'] = $row['id_pm_head'];
+		}
+	}
+	$smcFunc['db_free_result']($request);
+
+	// Make sure that we have been given a correct head pm id!
+	if ($context['display_mode'] == 2 && !empty($pmID) && !empty($lastData['id']) && $pmID != $lastData['id'])
+		redirectexit('action=pm;pmid=' . $lastData['id'] . (isset($_GET['kstart']) ? ';kstart' : '') . (isset($_GET['f']) ? ';f=' . $tmparr['f'] : '') . (isset($_GET['start']) ? ';start=' . $tmparr['start'] : '') . (isset($_GET['sort']) ? ';sort=' . $tmparr['sort'] : '') . (isset($tmparr['pmid']) ? '#msg' . $tmparr['pmid'] : ''));
+	elseif ($context['display_mode'] == 2 && !empty($pmID) && $pmID != $lastData['id'])
+		fatal_lang_error('no_access', false);]]></add>
+	</operation>
 </file>
 
 <!-------------------------------------------------------------------------->
@@ -1242,8 +1279,8 @@ function UnsendMessage()
 		<add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -2109,11 +2146,11 @@ function template_folder_actions()
 					<div class="pagesection">';
 
 			if ($context['folder'] != 'unread')
-        template_button_strip($conversation_buttons, 'right');]]></add>
+				template_button_strip($conversation_buttons, 'right');]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', isset($_REQUEST['edit']) ? ';edit' : '', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -2223,7 +2260,8 @@ function template_folder_actions()
 					if ($context['folder'] != 'unread' || ($context['folder'] == 'unread' && isset($message['is_unread'])))
 						echo '
 					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
-					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $txt['quote_to_all'], '</a></li>';
 
 					elseif ($context['folder'] == 'unread' && !isset($message['is_unread']))
 					{
@@ -2545,9 +2583,10 @@ function template_folder_actions()
 				</p><br class="clear" />
 			</div>
 			<span class="lowerframe"><span></span></span>
-		</fieldset></div>
-		<p><input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit floatright" /></p>';
-		}]]></add>
+		</fieldset></div>';
+		}
+		echo '
+		<p><input type="submit" name="submit" value="', $txt['pm_search_go'], '" class="button_submit floatright" /></p>';]]></add>
 	</operation>
 
 <!-------------------------------------------------------------------------->
