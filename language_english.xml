@@ -7,7 +7,7 @@
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (English - Modifications & PersonalMessage)      -->
 <!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.english.php" error="skip">
+<file name="$languagedir/Modifications.english.php">
 	<operation>
 		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
 		<add><![CDATA[// Version: 2.0; Modifications
@@ -21,7 +21,7 @@ $txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
 ]]></add>
 	</operation>
 </file>
-<file name="$languagedir/PersonalMessage.english.php" error="skip">
+<file name="$languagedir/PersonalMessage.english.php">
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_read'] = 'Read';]]></search>
 		<add><![CDATA[$txt['pm_unread'] = 'Unread';
@@ -89,6 +89,7 @@ $txt['pm_no_edit'] = 'Unable to edit PM because at least one recipient has read 
 $txt['pm_send_blocked'] = 'You are not allowed to send PMs until 24 hours after account activation.';
 $txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
 $txt['pm_search_what'] = 'Search group';
+$txt['pm_search_to_user'] = 'To user';
 
 ?>]]></add>
 	</operation>

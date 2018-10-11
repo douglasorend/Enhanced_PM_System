@@ -88,6 +88,8 @@ $txt['pm_edited'] = 'A sua mensagem foi alterada e todos os novos destinatários
 $txt['pm_no_edit'] = 'Não foi possível alterar a MP, porque pelo menos um dos destinatários já leu a MP que você pretende alterar.';
 $txt['pm_send_blocked'] = 'Você não tem permissão para enviar MPs durante as primeiras 24 horas do seu registo no fórum.';
 $txt['unsend_message'] = 'Cancelar o envio desta mensagem a todos os destinatários que ainda não a leram.';
+$txt['pm_search_what'] = 'Procurar por grupo';
+$txt['pm_search_to_user'] = 'Para usuário';
 
 ?>]]></add>
 	</operation>

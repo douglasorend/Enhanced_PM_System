@@ -84,6 +84,7 @@ $txt['pm_no_edit'] = 'Unable to edit PM because at least one recipient has read 
 $txt['pm_send_blocked'] = 'You are not allowed to send PMs until 24 hours after account activation.';
 $txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
 $txt['pm_search_what'] = 'Search group';
+$txt['pm_search_to_user'] = 'To user';
 
 ?>]]></add>
 	</operation>
