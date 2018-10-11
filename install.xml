@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>1.0</version>
+<version>1.2</version>
 
 <!-------------------------------------------------------------------------->
 <!-- PM Settings section (ManageSettings.php)                             -->
@@ -165,47 +165,8 @@
 	]]></add>
 	</operation>
 	<operation>
-		<search position="before"><![CDATA[$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);]]></search>
-		<add><![CDATA[
-	$context['edit'] = isset($_REQUEST['pmsg']) && isset($_REQUEST['edit']);
-	if ($context['edit'])
-	{
-		// Why would you try to edit someone else's PM?
-		$pmsg = isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0;
-		$result = $smcFunc['db_query']('', '
-			SELECT id_member_from
-			FROM {db_prefix}personal_messages
-			WHERE id_pm = {int:id_pm}',
-			array(
-				'id_pm' => (int) $_REQUEST['pmsg'],
-			)
-		);
-		$row = $smcFunc['db_fetch_assoc']($result);
-		$smcFunc['db_free_result']($result);
-		if (empty($row) || $row['id_member_from'] != $user_info['id'])
-			fatal_lang_error('pm_not_yours', false);
-
-		// Notify user if anyone has already read the requested PM:
-		$result = $smcFunc['db_query']('', '
-			SELECT COUNT(*) AS pm_unread
-			FROM {db_prefix}pm_recipients
-			WHERE id_pm = {int:id_pm}
-				AND is_read > {int:not_read}',
-			array(
-				'id_pm' => (int) $_REQUEST['pmsg'],
-				'not_read' => 0,
-			)
-		);
-		$row = $smcFunc['db_fetch_assoc']($result);
-		$smcFunc['db_free_result']($result);
-		$context['can_edit_msg'] = ($row['pm_unread'] == 0);
-		if (!$context['can_edit_msg'])
-			fatal_lang_error('pm_no_edit', false);
-	}]]></add>
-	</operation>
-	<operation>
 		<search position="replace"><![CDATA[if ($context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></search>
-		<add><![CDATA[if (!$context['can_edit_msg'] && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></add>
+		<add><![CDATA[if (!isset($context['can_edit_msg']) && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$isReceived = $smcFunc['db_num_rows']($request) != 0;]]></search>
@@ -954,37 +915,40 @@ function UnsendMessage()
 				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
 			</th>';
 	echo ']]></add>
-  </operation>
-  <operation>
-    <search position="replace"><![CDATA[<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>]]></search>
-    <add><![CDATA[';
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>]]></search>
+		<add><![CDATA[';
     if ($context['folder'] != 'unread')
       echo '
 			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
 		echo ']]></add>
 	</operation>
 	<operation>
-    <search position="before"><![CDATA[<div class="floatright">&nbsp;';]]></search>
-    <add><![CDATA[
+		<search position="before"><![CDATA[<div class="floatright">&nbsp;';]]></search>
+		<add><![CDATA[
 		
 if ($context['folder'] != 'unread') 
 {]]></add>
   </operation>
   <operation>
-    <search position="after"><![CDATA[	echo '
+    <search position="replace"><![CDATA[	echo '
 				</div>
 	</div>';
 }]]></search>
     <add><![CDATA[}
 
-]]></add>
+	echo '
+				</div>
+	</div>';
+}]]></add>
 	</operation>    
 	<operation>
-    <search position="replace"><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons))]]></search>
-    <add><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons) && $context['folder'] != 'unread')]]></add>
-  </operation>
-  <operation>
-    <search position="replace"><![CDATA[// Show the conversation buttons.
+		<search position="replace"><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons))]]></search>
+		<add><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons) && $context['folder'] != 'unread')]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Show the conversation buttons.
 			echo '
 					<div class="pagesection">';
 

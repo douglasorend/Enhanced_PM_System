@@ -1,6 +1,6 @@
 [hr]
-[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.1[/b][/size][/color]
-[url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.2[/b][/size][/color]
+[url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
 [/center]
 [hr]
 
@@ -30,7 +30,7 @@ o [url=http://www.simplemachines.org/community/index.php?action=profile;u=73143]
 o [url=http://code.google.com/p/ultimate-gnome/]Ultimate Gnome[/url] iconset (released under a GPL license) found at [url=http://www.iconfinder.com/search/?q=mail+iconset%3AUltimateGnome]IconFinder.com[/url]
 
 [color=blue][b][size=12pt][u]Compatibility Notes & Known Issues[/u][/size][/b][/color]
-This mod was tested on SMF 2.0.4, and may work on SMF 2.0 and later.  SMF 1.x is not and will not be supported!
+This mod was tested on SMF 2.0.7, and may work on SMF 2.0 and later.  SMF 1.x is not and will not be supported!
 
 The [url=http://custom.simplemachines.org/mods/index.php?mod=1974]PM Attachments[/url] mod should be installed first to avoid any conflict with this mod.
 
@@ -38,12 +38,20 @@ At present time, it is not possible to list and/or remove files attached to the 
 
 At present time, it is not possible to mass-move or mass-delete messages from the outbox.  Future versions of this mod may resolve this issue.
 
-[color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
-v1.0 - April 9, 2014
-o Initial Release of the mod
+[color=blue][b][size=12pt][u]Upgrade from Previous Version(s)[/u][/size][/b][/color]
+Upgrade is possible from [b]v1.0 and v1.1[/b] to [b]v1.2[/b].
 
-v1.1 - June 1st, 2013
+[color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+[u][b]v1.2 - June 8th, 2014[/b][/u]
+o Fixed an undefined variable error found in [b]PersonalMessage.php[/b]...
+o Fixed error in uninstaller from v1.1, relating to upgraded installations...
+o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to uninstall...
+
+[u][b]v1.1 - June 1st, 2014[/b][/u]
 o Fixed an error that keeps users from quoting or replying to PMs...
+
+[u][b]v1.0 - April 9, 2014[/b][/u]
+o Initial Release of the mod
 
 [hr]
 [url=http://creativecommons.org/licenses/by/3.0][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.1</version>
+
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[if (!$context['can_edit_msg'] && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></search>
+		<add><![CDATA[if (!isset($context['can_edit_msg']) && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></add>
+	</operation>
+</file>
+</modification>

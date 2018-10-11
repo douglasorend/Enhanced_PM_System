@@ -1,0 +1,21 @@
+[hr]
+[center][color=red][size=16pt][b]ENHANCED PM SYSTEM v1.2]/b][/size][/color]
+[url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] - [url=http://custom.simplemachines.org/mods/index.php?mod=3736]Link to Mod[/url]
+[/center]
+[hr]
+
+[color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
+v1.2 - June 8th, 2014
+o Fixed an undefined variable error found in [b]PersonalMessage.php[/b]...
+o Fixed error in uninstaller from v1.1, relating to upgraded installations...
+o Fixed error in uninstaller from v1.1, relating to one edit that didn't want to uninstall...
+
+v1.1 - June 1st, 2014
+o Fixed an error that keeps users from quoting or replying to PMs...
+
+v1.0 - April 9, 2014
+o Initial Release of the mod
+
+[hr]
+[url=http://creativecommons.org/licenses/by/3.0][img]http://i.creativecommons.org/l/by/3.0/80x15.png[/img][/url]
+This work is licensed under a [url=http://creativecommons.org/licenses/by/3.0]Creative Commons Attribution 3.0 Unported License[/url]

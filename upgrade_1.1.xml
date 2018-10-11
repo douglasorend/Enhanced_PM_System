@@ -6,7 +6,7 @@
 
 <file name="$sourcedir/PersonalMessage.php">
 	<operation>
-		<search position="before"><![CDATA[$context['edit'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['edit']);]]></search>
+		<search position="replace"><![CDATA[$context['edit'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['edit']);]]></search>
 		<add><![CDATA[$context['edit'] = isset($_REQUEST['pmsg']) && isset($_REQUEST['edit']);]]></add>
 	</operation>
 </file>
