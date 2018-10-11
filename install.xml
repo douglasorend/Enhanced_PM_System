@@ -108,7 +108,7 @@
 	if (!empty($pmsg))
 	{
 		$request = $smcFunc['db_query']('', '
-			SELECT id_member, is_read
+			SELECT id_member
 			FROM {db_prefix}pm_recipients
 			WHERE id_pm = {int:id_pm}',
 			array(
@@ -116,7 +116,7 @@
 			)
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$already_emailed[$row['id_member']] = $row['is_read'];
+			$already_emailed[$row['id_member']] = true;
 		$smcFunc['db_free_result']($request);
 	}]]></add>
 	</operation>
@@ -158,6 +158,11 @@
 	//$context['page_title'] = $txt['send_message'];]]></add>
 	</operation>
 	<operation>
+		<search position="after"><![CDATA[$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);]]></search>
+		<add><![CDATA[$context['edit'] = isset($_REQUEST['pmsg']) && isset($_REQUEST['edit']);
+	]]></add>
+	</operation>
+	<operation>
 		<search position="after"><![CDATA[// Check whether we've gone over the limit of messages we can send per hour.]]></search>
 		<add><![CDATA[// Set the title...
 	$context['page_title'] = $txt[ $context['edit'] ? 'edit_message' : 'send_message' ];
@@ -170,7 +175,7 @@
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$isReceived = $smcFunc['db_num_rows']($request) != 0;]]></search>
-		<add><![CDATA[$isReceived = !isset($context['edit']) && $smcFunc['db_num_rows']($request) != 0;]]></add>
+		<add><![CDATA[$isReceived = !$context['edit'] && $smcFunc['db_num_rows']($request) != 0;]]></add>
 	</operation>
 	<operation>
 		<search position="after"><![CDATA[else
@@ -245,6 +250,19 @@
 		$context['bbc_value'] = empty($names) ? '' : '&quot;' . implode('&quot;, &quot;', $names) . '&quot;';
 	}
 	]]></add>
+	</operation>
+
+<!---------------------------------------------------------------------------->
+<!-- Bug Fix in sendpm() allowed user to be notified upon editing PM if     -->
+<!-- NOT READ even if already notified of new PM for user	                -->
+<!---------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[// Get a basic pot started!
+							if (!isset($actions['labels'][$row['id_pm']]))
+								$actions['labels'][$row['id_pm']] = empty($row['labels']) ? array() : explode(',', $row['labels']);
+							$actions['labels'][$row['id_pm']][] = $ruleAction['v'];]]></search>
+		<add><![CDATA[// Get a basic pot started!
+							$actions['labels'][$row['id_pm']] = array($ruleAction['v']);]]></add>
 	</operation>
 
 <!-------------------------------------------------------------------------->
@@ -968,8 +986,8 @@ if ($context['folder'] != 'unread')
         template_button_strip($conversation_buttons, 'right');]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
-		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+		<search position="replace"><![CDATA[action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[action="', $scripturl, '?action=pm;sa=send2', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[echo '
@@ -1067,7 +1085,7 @@ if ($context['folder'] != 'unread')
 			<td>', $message['time'], '</td>
 			<td>', ($context['display_mode'] != 0 && $context['current_pm'] == $message['id'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></search>
 		<add><![CDATA[
-				', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'outbox' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
+				', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'unread' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
 			<td>', $message['time'], '</td>
 			<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
 	</operation>

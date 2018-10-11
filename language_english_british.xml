@@ -7,7 +7,7 @@
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (English - Modifications & PersonalMessage)      -->
 <!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.english.php" error="skip">
+<file name="$languagedir/Modifications.english_british.php" error="skip">
 	<operation>
 		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
 		<add><![CDATA[// Version: 2.0; Modifications
@@ -21,7 +21,7 @@ $txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
 ]]></add>
 	</operation>
 </file>
-<file name="$languagedir/PersonalMessage.english.php" error="skip">
+<file name="$languagedir/PersonalMessage.english_british.php" error="skip">
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_read'] = 'Read';]]></search>
 		<add><![CDATA[$txt['pm_unread'] = 'Unread';
@@ -41,29 +41,29 @@ $txt['pm_msg_label_remove'] = 'Current Folder';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_manage_labels'] = 'Manage Labels';
-$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected labels?';
-$txt['pm_labels_desc'] = 'From here you can add, edit and delete the labels used in your personal message center.';
+$txt['pm_labels_delete'] = 'Are you sure you want to delete the selected label(s)?';
+$txt['pm_labels_desc'] = 'You can add, edit and delete the labels used in your personal message centre here.';
 $txt['pm_label_add_new'] = 'Add New Label';
 $txt['pm_label_name'] = 'Label Name';
-$txt['pm_labels_no_exist'] = 'You currently have no labels setup!';]]></search>
+$txt['pm_labels_no_exist'] = 'You have no labels set up at the moment.';]]></search>
 		<add><![CDATA[$txt['pm_manage_labels'] = 'Manage Folders';
-$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected folders?';
-$txt['pm_labels_desc'] = 'From here you can add, edit and delete the folders used in your personal message center.';
+$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected folder(s)?';
+$txt['pm_labels_desc'] = 'You can add, edit and delete the folders used in your personal message centre here.';
 $txt['pm_label_add_new'] = 'Add New Folder';
 $txt['pm_label_name'] = 'Folder Name';
-$txt['pm_labels_no_exist'] = 'You currently have no folders setup!';]]></add>
+$txt['pm_labels_no_exist'] = 'You have no folders set up at the moment.';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_labels'] = 'Labels';]]></search>
 		<add><![CDATA[$txt['pm_labels'] = 'Folders';]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$txt['pm_search_choose_label'] = 'Choose labels to search by, or search all';]]></search>
-		<add><![CDATA[$txt['pm_search_choose_label'] = 'Choose folders to search by, or search all';]]></add>
+		<search position="replace"><![CDATA[$txt['pm_search_choose_label'] = 'Choose labels for which to search or search all';]]></search>
+		<add><![CDATA[$txt['pm_search_choose_label'] = 'Choose folders for which to search or search all';]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';]]></search>
-		<add><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.';]]></add>
+		<search position="replace"><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name_html_safe'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';]]></search>
+		<add><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name_html_safe'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['sent_items'] = 'Sent Items';]]></search>
@@ -73,9 +73,9 @@ $txt['unsend_item'] = 'Unsend';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_rule_label'] = 'Label message with';
-$txt['pm_rule_sel_label'] = 'Select Label';]]></search>
+$txt['pm_rule_sel_label'] = 'Select Label:';]]></search>
 		<add><![CDATA[$txt['pm_rule_label'] = 'Move message to folder';
-$txt['pm_rule_sel_label'] = 'Select Folder';]]></add>
+$txt['pm_rule_sel_label'] = 'Select Folder:';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[?>]]></search>
@@ -93,7 +93,7 @@ $txt['pm_search_what'] = 'Search group';
 ?>]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Label';]]></search>
+		<search position="replace"><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter by Label';]]></search>
 		<add><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Folder';]]></add>
 	</operation>
 	<operation>

@@ -7,24 +7,24 @@
 <!-------------------------------------------------------------------------->
 <!-- Language file edits (Portuguese - Modifications & PersonalMessage)      -->
 <!-------------------------------------------------------------------------->
-<file name="$languagedir/Modifications.portuguese_pt.php" error="skip">
+<file name="$languagedir/Modifications.portuguese_pt-utf8.php" error="skip">
 	<operation>
 		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
 		<add><![CDATA[// Version: 2.0; Modifications
 /* Enhanced PM System mod */
 $txt['eps_title'] = 'Sistema Melhorado de MPs';
-$txt['eps_pm_view_switch'] = 'Permitir que os utilizadores escolham outras vistas de MPs além do modo de conversação';
+$txt['eps_pm_view_switch'] = 'Permitir que os utilizadores escolham outras vistas de MPs alÃ©m do modo de conversaÃ§Ã£o';
 $txt['eps_deny_unsend'] = 'Impedir que os utilizadores cancelem MPs por ler';
 $txt['eps_deny_edit'] = 'Impedir que os utilizadores alterem MPs por ler';
-$txt['eps_block_1st_day'] = 'Impedir o envio de MPs no primeiro dia (24 horas) de registo no fórum';
+$txt['eps_block_1st_day'] = 'Impedir o envio de MPs no primeiro dia (24 horas) de registo no fÃ³rum';
 /* End Enhanced PM System mod */
 ]]></add>
 	</operation>
 </file>
-<file name="$languagedir/PersonalMessage.portuguese_pt.php" error="skip">
+<file name="$languagedir/PersonalMessage.portuguese_pt-utf8.php" error="skip">
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_read'] = 'Ler';]]></search>
-		<add><![CDATA[$txt['pm_unread'] = 'Não lida';
+		<add><![CDATA[$txt['pm_unread'] = 'NÃ£o lida';
 $txt['pm_read'] = 'Lida';]]></add>
 	</operation>
 	<operation>
@@ -45,13 +45,13 @@ $txt['pm_labels_delete'] = 'Tem a certeza que quer apagar os marcadores selecion
 $txt['pm_labels_desc'] = 'Aqui pode adicionar, editar e apagar marcadores usados nas suas mensagens.';
 $txt['pm_label_add_new'] = 'Adicionar novo marcador';
 $txt['pm_label_name'] = 'Nome do marcador';
-$txt['pm_labels_no_exist'] = 'Atualmente não tem nenhum marcador definido!';]]></search>
+$txt['pm_labels_no_exist'] = 'Atualmente nÃ£o tem nenhum marcador definido!';]]></search>
 		<add><![CDATA[$txt['pm_manage_labels'] = 'Gerir Pastas';
 $txt['pm_labels_delete'] = 'Tem a certeza que pretende apagar as pastas selecionadas?';
 $txt['pm_labels_desc'] = 'Aqui pode adicionar, alterar e apagar pastas usadas no seu centro de mensagens privadas.';
 $txt['pm_label_add_new'] = 'Adicionar Nova Pasta';
 $txt['pm_label_name'] = 'Nome da Pasta';
-$txt['pm_labels_no_exist'] = 'De momento, não tem pastas criadas!';]]></add>
+$txt['pm_labels_no_exist'] = 'De momento, nÃ£o tem pastas criadas!';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['pm_labels'] = 'Marcadores';]]></search>
@@ -62,13 +62,13 @@ $txt['pm_labels_no_exist'] = 'De momento, não tem pastas criadas!';]]></add>
 		<add><![CDATA[$txt['pm_search_choose_label'] = 'Escolha as pastas a procurar ou procure todas';]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$txt['pm_email'] = 'Acabou de receber uma Mensagem Pessoal enviada por SENDER no ' . $context['forum_name'] . '.\\n\\nIMPORTANTE: Lembre-se, isto é apenas uma notificação. Por favor não responda a este e-mail.\\n\\nA mensagem que lhe foi enviada foi a seguinte:\\n\\nMESSAGE';]]></search>
-		<add><![CDATA[$txt['pm_email'] = 'Acabou de receber uma mensagem privada de SENDER em ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANTE: Lembre-se, isto é apenas uma notificação. Por favor, não responda a este e-mail.\\n\\nA mensagem que recebeu foi a seguinte:\\n\\nMESSAGE';]]></add>
+		<search position="replace"><![CDATA[$txt['pm_email'] = 'Acabou de receber uma Mensagem Pessoal enviada por SENDER no ' . $context['forum_name'] . '.\\n\\nIMPORTANTE: Lembre-se, isto Ã© apenas uma notificaÃ§Ã£o. Por favor nÃ£o responda a este e-mail.\\n\\nA mensagem que lhe foi enviada foi a seguinte:\\n\\nMESSAGE';]]></search>
+		<add><![CDATA[$txt['pm_email'] = 'Acabou de receber uma mensagem privada de SENDER em ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANTE: Lembre-se, isto Ã© apenas uma notificaÃ§Ã£o. Por favor, nÃ£o responda a este e-mail.\\n\\nA mensagem que recebeu foi a seguinte:\\n\\nMESSAGE';]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[$txt['sent_items'] = 'Itens Enviados';]]></search>
-		<add><![CDATA[$txt['sent_items'] = 'Mensagens Lidas';
-$txt['unread_items'] = 'Caixa de Saída';
+		<add><![CDATA[$txt['sent_items'] = 'Mensagens Enviadas';
+$txt['unread_items'] = 'Caixa de SaÃ­da';
 $txt['unsend_item'] = 'Cancelar envio';]]></add>
 	</operation>
 	<operation>
@@ -81,13 +81,13 @@ $txt['pm_rule_sel_label'] = 'Escolher pasta';]]></add>
 		<search position="replace"><![CDATA[?>]]></search>
 		<add><![CDATA[$txt['pm_edit'] = 'Alterar';
 $txt['edit_message'] = 'Alterar Mensagem';
-$txt['pm_unsent_denied'] = 'Você não pode cancelar o envio de uma mensagem.';
-$txt['pm_unsent'] = 'A sua mensagem foi cancelada com sucesso para todos os destinatários.';
-$txt['pm_unsent_some'] = 'A sua mensagem foi cancelada de todos os destinatários que ainda não a tinham lido.';
-$txt['pm_edited'] = 'A sua mensagem foi alterada e todos os novos destinatários receberam e-mails.';
-$txt['pm_no_edit'] = 'Não foi possível alterar a MP, porque pelo menos um dos destinatários já leu a MP que você pretende alterar.';
-$txt['pm_send_blocked'] = 'Você não tem permissão para enviar MPs durante as primeiras 24 horas do seu registo no fórum.';
-$txt['unsend_message'] = 'Cancelar o envio desta mensagem a todos os destinatários que ainda não a leram.';
+$txt['pm_unsent_denied'] = 'VocÃª nÃ£o pode cancelar o envio de uma mensagem.';
+$txt['pm_unsent'] = 'A sua mensagem foi cancelada com sucesso para todos os destinatÃ¡rios.';
+$txt['pm_unsent_some'] = 'A sua mensagem foi cancelada de todos os destinatÃ¡rios que ainda nÃ£o a tinham lido.';
+$txt['pm_edited'] = 'A sua mensagem foi alterada e todos os novos destinatÃ¡rios receberam e-mails.';
+$txt['pm_no_edit'] = 'NÃ£o foi possÃ­vel alterar a MP, porque pelo menos um dos destinatÃ¡rios jÃ¡ leu a MP que vocÃª pretende alterar.';
+$txt['pm_send_blocked'] = 'VocÃª nÃ£o tem permissÃ£o para enviar MPs durante as primeiras 24 horas do seu registo no fÃ³rum.';
+$txt['unsend_message'] = 'Cancelar o envio desta mensagem a todos os destinatÃ¡rios que ainda nÃ£o a leram.';
 
 ?>]]></add>
 	</operation>
