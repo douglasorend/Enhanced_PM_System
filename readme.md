@@ -54,12 +54,15 @@ The [PM Attachments](http://custom.simplemachines.org/mods/index.php?mod=1974) m
 
 ## Questions and Answers
 **Q:** Will this mod ever include PM attachment support?
+
 **A:** No, there is a [PM Attachments](http://custom.simplemachines.org/mods/index.php?mod=1974) mod already developed that supports this.  The exception is editing PMs with attachments, which this mod will eventually support fully.
 
 **Q:** Why can't I edit the attachments on a PM?
+
 **A:** At present time, it is not possible to list and/or remove files attached to the PM while editing the PM.  Future versions of this mod will resolve this issue.
 
 **Q:** Why can't I move messages from the Outbox and/or Sent Items folder?
+
 **A:** At present time, it is not possible to mass-move messages from the Outbox or Sent Items folder.  Future versions of this mod may resolve this issue.
 
 ## Translators
