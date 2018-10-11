@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>Dougiefresh:Enhanced_PM_System</id>
+	<name>Enhanced PM System</name>
+	<type>modification</type>
+	<version>1.0</version>
+
+	<install for="2.0 - 2.0.99">
+		<readme parsebbc="true">readme.txt</readme>
+		<database>edit_db.php</database>
+		<modification type="file">install.xml</modification>
+		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unread.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unsend.png" destination="$imagesdir/buttons" />
+	</install>
+	<uninstall for="2.0 - 2.0.99">
+		<modification type="file" reverse="true">install.xml</modification>
+		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
+	</uninstall>
+</package-info>

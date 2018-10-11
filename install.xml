@@ -1,0 +1,1460 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:Enhanced_PM_System</id>
+<version>1.0</version>
+
+<!-------------------------------------------------------------------------->
+<!-- PM Settings section (ManageSettings.php)                             -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/ManageSettings.php">
+	<operation>
+		<search position="replace"><![CDATA[array('check', 'disallow_sendBody'),]]></search>
+		<add><![CDATA[array('check', 'disallow_sendBody'),
+
+			// Enhanced PM System setting for allowing users to select view
+			array('title', 'eps_title'),
+			array('check', 'eps_pm_view_switch'),
+			array('check', 'eps_deny_unsend'),
+			array('check', 'eps_deny_edit'),
+			array('check', 'eps_block_1st_day'),]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
+<!-- Deny ability to PM for 1st Day  (Register.php & Subs-Members.php)    -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/Register.php">
+	<operation>
+		<search position="replace"><![CDATA[updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => ''));]]></search>
+		<add><![CDATA[updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => '', 'activation_time' => time()));]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Subs-Members.php">
+	<operation>
+		<search position="after"><![CDATA[	);
+
+	// Setup the activation status on this new account so it is correct - firstly is it an under age account?]]></search>
+		<add><![CDATA[		'activation_time' => ($regOptions['require'] == 'activation' ? 0 : time()),
+]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
+<!-- Edit PM section (Subs-Post.php & PersonalMessage.php)                -->
+<!-------------------------------------------------------------------------->
+<file name="$sourcedir/Subs-Post.php">
+	<operation>
+		<search position="replace"><![CDATA[function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null, $pm_head = 0]]></search>
+		<add><![CDATA[function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null, $pm_head = 0, $pmsg = 0]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Insert the message itself and then grab the last insert id.
+	$smcFunc['db_insert']('',
+		'{db_prefix}personal_messages',
+		array(
+			'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+			'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+		),
+		array(
+			$pm_head, $from['id'], ($store_outbox ? 0 : 1),
+			$from['username'], time(), $htmlsubject, $htmlmessage,
+		),
+		array('id_pm')
+	);
+	$id_pm = $smcFunc['db_insert_id']('{db_prefix}personal_messages', 'id_pm');]]></search>
+		<add><![CDATA[// Insert the message itself and then grab the last insert id.
+	if (empty($pmsg))
+	{
+		$smcFunc['db_insert']('',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				$pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = $smcFunc['db_insert_id']('{db_prefix}personal_messages', 'id_pm');
+	}
+	else
+	{
+		$smcFunc['db_insert']('replace',
+			'{db_prefix}personal_messages',
+			array(
+				'id_pm' => 'int', 'id_pm_head' => 'int', 'id_member_from' => 'int', 'deleted_by_sender' => 'int',
+				'from_name' => 'string-255', 'msgtime' => 'int', 'subject' => 'string-255', 'body' => 'string-65534',
+			),
+			array(
+				(int) $pmsg, $pm_head, $from['id'], ($store_outbox ? 0 : 1),
+				$from['username'], time(), $htmlsubject, $htmlmessage,
+			),
+			array('id_pm')
+		);
+		$id_pm = (int) $pmsg;
+	}
+]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[if (empty($modSettings['permission_enable_deny']))
+		$disallowed_groups = array();]]></search>
+		<add><![CDATA[
+
+	// If we are editing a PM, take note of who we have already emailed about the PM so we don't email them again :p
+	$already_emailed = array();
+	if (!empty($pmsg))
+	{
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member, is_read
+			FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:id_pm}',
+			array(
+				'id_pm' => $pmsg,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$already_emailed[$row['id_member']] = $row['is_read'];
+		$smcFunc['db_free_result']($request);
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0, isset($deletes[$to]) ? 1 : 0, 1]]></search>
+		<add><![CDATA[$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0, isset($deletes[$to]) ? 1 : 0, isset($already_emailed[$to]) ? $already_emailed[$to] : 0]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Add one to their unread and read message counts.
+	foreach ($all_to as $k => $id)
+		if (isset($deletes[$id]))
+			unset($all_to[$k]);
+	if (!empty($all_to))
+		updateMemberData($all_to, array('instant_messages' => '+', 'unread_messages' => '+', 'new_pm' => 1));]]></search>
+		<add><![CDATA[// Add one to their unread and read message counts.
+	if (empty($pmsg))
+	{
+		foreach ($all_to as $k => $id)
+			if (isset($deletes[$id]))
+				unset($all_to[$k]);
+		if (!empty($all_to))
+			updateMemberData($all_to, array('instant_messages' => '+', 'unread_messages' => '+', 'new_pm' => 1));
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && (!empty($modSettings['enable_buddylist']) && $row['is_buddy']))) && $row['is_activated'] == 1)]]></search>
+		<add><![CDATA[if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && (!empty($modSettings['enable_buddylist']) && $row['is_buddy']))) && $row['is_activated'] == 1 && !isset($already_emailed[$row['id_member']]))]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/PersonalMessage.php">
+	<operation>
+		<search position="replace"><![CDATA[$context['send_log'] = sendpm($recipientList, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0]]></search>
+		<add><![CDATA[$context['send_log'] = sendpm($recipientList, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0, !empty($_REQUEST['pmsg']) ? (int) $_REQUEST['pmsg'] : 0]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Set the title...
+	$context['page_title'] = $txt['send_message'];]]></search>
+		<add><![CDATA[// Set the title...
+	//$context['page_title'] = $txt['send_message'];]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[// Check whether we've gone over the limit of messages we can send per hour.]]></search>
+		<add><![CDATA[// Set the title...
+	$context['page_title'] = $txt[ $context['edit'] ? 'edit_message' : 'send_message' ];
+
+	]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);]]></search>
+		<add><![CDATA[
+	$context['edit'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['edit']);
+	if ($context['edit'])
+	{
+		// Why would you try to edit someone else's PM?
+		$pmsg = isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0;
+		$result = $smcFunc['db_query']('', '
+			SELECT id_member_from
+			FROM {db_prefix}personal_messages
+			WHERE id_pm = {int:id_pm}',
+			array(
+				'id_pm' => (int) $_REQUEST['pmsg'],
+			)
+		);
+		$row = $smcFunc['db_fetch_assoc']($result);
+		$smcFunc['db_free_result']($result);
+		if (empty($row) || $row['id_member_from'] != $user_info['id'])
+			fatal_lang_error('pm_not_yours', false);
+
+		// Notify user if anyone has already read the requested PM:
+		$result = $smcFunc['db_query']('', '
+			SELECT COUNT(*) AS pm_unread
+			FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:id_pm}
+				AND is_read > {int:not_read}',
+			array(
+				'id_pm' => (int) $_REQUEST['pmsg'],
+				'not_read' => 0,
+			)
+		);
+		$row = $smcFunc['db_fetch_assoc']($result);
+		$smcFunc['db_free_result']($result);
+		$context['can_edit_msg'] = ($row['pm_unread'] == 0);
+		if (!$context['can_edit_msg'])
+			fatal_lang_error('pm_no_edit', false);
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></search>
+		<add><![CDATA[if (!$context['can_edit_msg'] && $context['reply'] && trim($context['response_prefix']) != '' && $smcFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$isReceived = $smcFunc['db_num_rows']($request) != 0;]]></search>
+		<add><![CDATA[$isReceived = !$context['edit'] && $smcFunc['db_num_rows']($request) != 0;]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[else
+			$form_message = '';]]></search>
+		<add><![CDATA[elseif (isset($_REQUEST['edit']))
+			$form_message = preg_replace('~<br ?/?' . '>~i', "\n", $row_quoted['body']);
+		]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA['url' => $scripturl . '?action=pm;sa=send',
+		'name' => $txt['new_message']]]></search>
+		<add><![CDATA['url' => $scripturl . '?action=pm;sa=send',
+		'name' => $txt[ $context['edit'] ? 'edit_message' : 'new_message' ],]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];]]></search>
+		<add><![CDATA[$context['subject'] = $form_subject != '' ? $form_subject : '';]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[else
+		$context['to_value'] = '';]]></search>
+		<add><![CDATA[elseif ($context['edit'])
+	{
+		// Get the "To" recipients:
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name
+			FROM {db_prefix}pm_recipients AS pmr
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+			WHERE pmr.id_pm = {int:id_pm}
+				AND pmr.bcc = {int:not_bcc}',
+			array(
+				'id_pm' => $pmsg,
+				'not_bcc' => 0,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['recipients']['to'][] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+			);
+		$smcFunc['db_free_result']($request);
+
+		// Get a literal name list in case the user has JavaScript disabled.
+		$names = array();
+		foreach ($context['recipients']['to'] as $to)
+			$names[] = $to['name'];
+		$context['to_value'] = empty($names) ? '' : '&quot;' . implode('&quot;, &quot;', $names) . '&quot;';
+
+		// Get the "Bcc" recipients:
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name
+			FROM {db_prefix}pm_recipients AS pmr
+				INNER JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+			WHERE pmr.id_pm = {int:id_pm}
+				AND pmr.bcc = {int:is_bcc}',
+			array(
+				'id_pm' => $pmsg,
+				'is_bcc' => 1,
+			)
+		);
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$context['recipients']['bcc'][] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+			);
+		$smcFunc['db_free_result']($request);
+
+		// Get a literal name list in case the user has JavaScript disabled.
+		$names = array();
+		foreach ($context['recipients']['bcc'] as $to)
+			$names[] = $to['name'];
+		$context['bbc_value'] = empty($names) ? '' : '&quot;' . implode('&quot;, &quot;', $names) . '&quot;';
+	}
+	]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Unsend PM (PersonalMessage.php)                                      -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[	void ApplyRules()
+		// !!!]]></search>
+		<add><![CDATA[void ApplyRules()
+		// !!!
+		
+	void UnsendMessage()
+		// !!!]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA['settings' => 'MessageSettings',]]></search>
+		<add><![CDATA['settings' => 'MessageSettings',
+		'unsend' => 'UnsendMessage',]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[?>]]></search>
+		<add><![CDATA[// Unsend the specified personal message.
+function UnsendMessage()
+{
+	global $user_info, $modSettings, $smcFunc, $context;
+
+	// Why would you want access to your sent items if you're not allowed to send anything?
+	isAllowedTo('pm_send');
+
+	// Why would you try to unsend someone else's PM?
+	$pmsg = isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0;
+	$result = $smcFunc['db_query']('', '
+		SELECT id_member_from
+		FROM {db_prefix}personal_messages
+		WHERE id_pm = {int:id_pm}',
+		array(
+			'id_pm' => $pmsg,
+		)
+	);
+	$row = $smcFunc['db_fetch_assoc']($result);
+	$smcFunc['db_free_result']($result);
+	if (empty($row) || $row['id_member_from'] != $user_info['id'])
+		fatal_lang_error('pm_not_yours', false);
+
+	// Why are you trying to unsend an PM when the admin won't let ya?
+	if (!empty($modSettings['eps_deny_unsend']))
+		fatal_lang_error('pm_unsend_denied', false);
+
+	// Remove all recipients who haven't read the PM yet...
+	$result = $smcFunc['db_query']('', '
+		SELECT id_member
+		FROM {db_prefix}pm_recipients
+		WHERE id_pm = {int:id_pm}
+			AND is_read = {int:not_read}',
+		array(
+			'id_pm' => $pmsg,
+			'not_read' => 0,
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($result))
+		deleteMessages( array($pmsg), null, $row['id_member']);
+	$smcFunc['db_free_result']($result);
+
+	// Remove the PM if nobody is going to receive it...
+	$result = $smcFunc['db_query']('', '
+		SELECT COUNT(*) AS pm_unread
+		FROM {db_prefix}pm_recipients
+		WHERE id_pm = {int:id_pm}
+			AND is_read > {int:not_read}',
+		array(
+			'id_pm' => $pmsg,
+			'not_read' => 0,
+		)
+	);
+	$row = $smcFunc['db_fetch_assoc']($result);
+	$smcFunc['db_free_result']($result);
+	if ($row['pm_unread'] == 0)
+		deleteMessages( array($pmsg), null, $user_info['id']);
+
+	// Done... Tell user what we accomplished...
+	redirectexit($context['current_label_redirect'] . ';done=unsent' . ($row['pm_unread'] != 0 ? '_some' : ''));
+}
+
+?>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (isset($_GET['done']) && ($_GET['done'] == 'sent'))
+		$context['pm_sent'] = true;]]></search>
+		<add><![CDATA[if (isset($_GET['done']))
+	{
+		switch ($_GET['done'])
+		{
+			case 'sent':
+				$context['pm_sent'] = true;
+				break;
+			case 'unsent':
+				$context['pm_unsent'] = true;
+				break;
+			case 'unsent_some':
+				$context['pm_unsent'] = true;
+				break;
+			case 'edit':
+				$context['pm_edit'] = true;
+				break;
+		}
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!empty($context['send_log']) && empty($context['send_log']['failed']))
+		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=sent';]]></search>
+		<add><![CDATA[if (!empty($context['send_log']) && empty($context['send_log']['failed']))
+		$context['current_label_redirect'] = $context['current_label_redirect'] . ';done=' . (empty($_GET['pmsg']) ? 'sent' : 'edit');]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Seperation of PM topics and views (PersonalMessage.php)              -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="before"><![CDATA[// Changing view?
+	if (isset($_GET['view']))
+	{
+		$context['display_mode'] = $context['display_mode'] > 1 ? 0 : $context['display_mode'] + 1;
+		updateMemberData($user_info['id'], array('pm_prefs' => ($user_settings['pm_prefs'] & 252) | $context['display_mode']));
+	}
+]]></search>
+		<add><![CDATA[
+	// Set the PM view to conversation mode unless admin settings allow users to select a different view:
+	if (empty($modSettings['eps_pm_view_switch']))
+		$context['display_mode'] = 2;
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+			elseif ($label_type[$row['id_pm']] !== 'rem')
+				$labels[] = $to_label[$row['id_pm']];]]></search>
+		<add><![CDATA[
+			elseif ($label_type[$row['id_pm']] !== 'rem')
+			{
+				$labels[] = $to_label[$row['id_pm']];
+				// Floydpink INSERT - Remove existing label so that message is moved rather than copied
+				unset($labels[0]);
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Otherwise do just the current one!
+		elseif (!empty($context['current_pm']))
+			markMessages($display_pms, $context['current_label_id']);]]></search>
+		<add><![CDATA[// Otherwise do just the current one!
+		elseif (!empty($context['current_pm']) && ($context['display_mode'] == 1 || (isset($_GET['pmid']) && $context['folder'] != 'unread')))
+			markMessages($display_pms, $context['current_label_id']);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[ApplyRules();
+		updateMemberData($user_info['id'], array('new_pm' => 0));
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}pm_recipients
+			SET is_new = {int:not_new}
+			WHERE id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'not_new' => 0,
+			)
+		);]]></search>
+		<add><![CDATA[ApplyRules();
+		if ($context['display_mode'] != 2)
+		{
+			updateMemberData($user_info['id'], array('new_pm' => 0));
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}pm_recipients
+				SET is_new = {int:not_new}
+				WHERE id_member = {int:current_member}',
+				array(
+					'current_member' => $user_info['id'],
+					'not_new' => 0,
+				)
+			);
+		}]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[// Now we have the labels, and assuming we have unsorted mail, apply our rules!]]></search>
+		<add><![CDATA[
+	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Preferences...
+	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;
+]]></search>
+		<add><![CDATA[// Preferences...]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Seperation of unread PMs from sent PMs (PersonalMessage.php)         -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[$context['from_or_to'] = $context['folder'] != 'sent' ? 'from' : 'to';]]></search>
+		<add><![CDATA[$context['from_or_to'] = ($context['folder'] == 'sent' || $context['folder'] == 'unread') ? 'to' : 'from';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// ... but wait - what if we want to start from a specific message?
+	if (isset($_GET['pmid']))
+	{
+		$pmID = (int) $_GET['pmid'];
+
+		// Make sure you have access to this PM.
+		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))]]></search>
+		<add><![CDATA[// ... but wait - what if we want to start from a specific message?
+	if (isset($_GET['pmid']))
+	{
+		$pmID = (int) $_GET['pmid'];
+
+		// Make sure you have access to this PM.
+		if (!isAccessiblePM($pmID, $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'outbox' : 'inbox'))]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// Sanitize and validate pmsg variable if set.
+	if (isset($_GET['pmsg']))
+	{
+		$pmsg = (int) $_GET['pmsg'];
+
+		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' ? 'outbox' : 'inbox'))]]></search>
+		<add><![CDATA[// Sanitize and validate pmsg variable if set.
+	if (isset($_GET['pmsg']))
+	{
+		$pmsg = (int) $_GET['pmsg'];
+
+		if (!isAccessiblePM($pmsg, $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'outbox' : 'inbox'))]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent')
+		isAllowedTo('pm_send');]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent' || $context['folder'] == 'unread')
+		isAllowedTo('pm_send');]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[IFNULL(mem.real_name, pm.from_name) AS real_name
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '' : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = {int:replied_to})') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+			WHERE pm.id_pm = {int:replied_to}' . ($context['folder'] == 'sent' ? ']]></search>
+		<add><![CDATA[IFNULL(mem.real_name, pm.from_name) AS real_name
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' || $context['folder'] == 'unread'? '' : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = {int:replied_to})') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+			WHERE pm.id_pm = {int:replied_to}' . ($context['folder'] == 'sent' || $context['folder'] == 'unread'? ']]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+			WHERE pm.id_member_from = {int:current_member}
+				AND pm.deleted_by_sender = {int:not_deleted}',
+			array(
+				'current_member' => $user_info['id'],
+				'not_deleted' => 0,
+			)
+		);]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr
+			WHERE pm.id_member_from = {int:current_member}
+				AND pmr.is_read > {int:not_read}
+				AND pm.deleted_by_sender = {int:not_deleted}',
+			array(
+				'current_member' => $user_info['id'],
+				'not_deleted' => 0,
+				'not_read' => 0,
+			)
+		);
+	elseif ($context['folder'] == 'unread')
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr
+			WHERE pm.id_member_from = {int:current_member}
+				AND pmr.is_read = {int:not_read}
+				AND pm.deleted_by_sender = {int:not_deleted}',
+			array(
+				'current_member' => $user_info['id'],
+				'not_deleted' => 0,
+				'not_read' => 0,
+			)
+		);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif (!isset($_GET['kstart']))
+		{
+			if ($context['folder'] == 'sent')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+					WHERE id_member_from = {int:current_member}
+						AND deleted_by_sender = {int:not_deleted}
+						AND id_pm ' . ($descending ? '>' : '<') . ' {int:id_pm}',
+					array(
+						'current_member' => $user_info['id'],
+						'not_deleted' => 0,
+						'id_pm' => $pmID,
+					)
+				);]]></search>
+		<add><![CDATA[elseif (!isset($_GET['kstart']))
+		{
+			if ($context['folder'] == 'sent')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr
+					WHERE id_member_from = {int:current_member}
+						AND deleted_by_sender = {int:not_deleted}
+						AND pmr.is_read > {int:not_read}
+						AND id_pm ' . ($descending ? '>' : '<') . ' {int:id_pm}',
+					array(
+						'current_member' => $user_info['id'],
+						'not_deleted' => 0,
+						'id_pm' => $pmID,
+						'not_read' => 0,
+					)
+				);
+			elseif ($context['folder'] == 'unread')
+				$request = $smcFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+						INNER JOIN {db_prefix}pm_recipients AS pmr
+					WHERE id_member_from = {int:current_member}
+						AND deleted_by_sender = {int:not_deleted}
+						AND pmr.is_read = {int:not_read}
+						AND id_pm ' . ($descending ? '>' : '<') . ' {int:id_pm}',
+					array(
+						'current_member' => $user_info['id'],
+						'not_deleted' => 0,
+						'id_pm' => $pmID,
+						'not_read' => 0,
+					)
+				);
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:not_deleted}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:not_deleted}' : '1=1') . (empty($pmsg) ? '' : '
+					AND pm.id_pm = {int:id_pm}') . '
+				GROUP BY pm.id_pm_head
+				ORDER BY sort_param' . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'not_deleted' => 0,
+					'id_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'id_pm' => isset($pmsg) ? $pmsg : '0',
+					'sort' => $_GET['sort'],]]></search>
+		<add><![CDATA[FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:not_deleted}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:not_deleted}' : '1=1') . (empty($pmsg) ? '' : '
+					AND pm.id_pm = {int:id_pm}') .
+					($context['folder'] == 'sent' ? ' AND pmr.is_read > {int:not_read}' : ($context['folder'] == 'unread' ? ' AND pmr.is_read = {int:not_read}' : '')) . '
+				GROUP BY pm.id_pm_head
+				ORDER BY sort_param' . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'not_deleted' => 0,
+					'id_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'id_pm' => isset($pmsg) ? $pmsg : '0',
+					'sort' => $_GET['sort'],
+					'not_read' => 0,]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:not_deleted}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})') : '') . '
+				WHERE ' . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN ({array_int:pm_list})') . '
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'pm_list' => array_keys($sub_pms),
+					'not_deleted' => 0,
+					'sort' => $_GET['sort'],
+					'id_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',]]></search>
+		<add><![CDATA[FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:not_deleted}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:id_member})') : '') . '
+				WHERE ' . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN ({array_int:pm_list})') .
+					($context['folder'] == 'sent' ? ' AND pmr.is_read > {int:not_read}' : ($context['folder'] == 'unread' ? ' AND pmr.is_read = {int:not_read}' : '')) . '
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && ($context['folder'] == 'sent' || $context['folder'] == 'unread') ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'pm_list' => array_keys($sub_pms),
+					'not_deleted' => 0,
+					'sort' => $_GET['sort'],
+					'id_member' => $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pmr.id_member' : 'pm.id_member_from',
+					'not_read' => 0,]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$request = $smcFunc['db_query']('pm_conversation_list', '
+				SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
+				FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:deleted_by}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($pmsg) ? '' : '
+					AND pm.id_pm = {int:pmsg}') . '
+				GROUP BY pm.id_pm_head
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'deleted_by' => 0,
+					'sort' => $_GET['sort'],
+					'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'pmsg' => isset($pmsg) ? (int) $pmsg : 0,]]></search>
+		<add><![CDATA[$request = $smcFunc['db_query']('pm_conversation_list', '
+				SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
+				FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:deleted_by}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($pmsg) ? '' : '
+					AND pm.id_pm = {int:pmsg}') .
+					($context['folder'] == 'sent' ? ' AND pmr.is_read > {int:not_read}' : ($context['folder'] == 'unread' ? ' AND pmr.is_read = {int:not_read}' : '')) . '
+				GROUP BY pm.id_pm_head
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'deleted_by' => 0,
+					'sort' => $_GET['sort'],
+					'pm_member' => $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pmr.id_member' : 'pm.id_member_from',
+					'pmsg' => isset($pmsg) ? (int) $pmsg : 0,
+					'not_read' => 0,]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$request = $smcFunc['db_query']('', '
+			SELECT pm.id_pm, pm.id_pm_head, pm.id_member_from
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '' . ($context['sort_by'] == 'name' ? '
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+					AND pmr.id_member = {int:current_member}
+					AND pmr.deleted = {int:is_deleted}
+					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
+			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {raw:current_member}
+				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($pmsg) ? '' : '
+				AND pm.id_pm = {int:pmsg}') . '
+			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+			LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+			array(
+				'current_member' => $user_info['id'],
+				'is_deleted' => 0,
+				'sort' => $_GET['sort'],
+				'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+				'pmsg' => isset($pmsg) ? (int) $pmsg : 0,]]></search>
+		<add><![CDATA[$request = $smcFunc['db_query']('', '
+			SELECT pm.id_pm, pm.id_pm_head, pm.id_member_from
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? '
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+					AND pmr.id_member = {int:current_member}
+					AND pmr.deleted = {int:is_deleted}
+					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
+			WHERE ' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pm.id_member_from = {raw:current_member}
+				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($pmsg) ? '' : '
+				AND pm.id_pm = {int:pmsg}') .
+				($context['folder'] == 'sent' ? ' AND pmr.is_read > {int:not_read}' : ($context['folder'] == 'unread' ? ' AND pmr.is_read = {int:not_read}' : '')) . '
+			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
+			LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+			array(
+				'current_member' => $user_info['id'],
+				'is_deleted' => 0,
+				'sort' => $_GET['sort'],
+				'pm_member' => $context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pmr.id_member' : 'pm.id_member_from',
+				'pmsg' => isset($pmsg) ? (int) $pmsg : 0,
+				'not_read' => 0,]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['folder'] == 'sent' || empty($row['bcc']))
+				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
+
+			if ($row['id_member_to'] == $user_info['id'] && $context['folder'] != 'sent')]]></search>
+		<add><![CDATA[if ($context['folder'] == 'sent' || $context['folder'] == 'unread' || empty($row['bcc']))
+				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
+
+			if ($row['id_member_to'] == $user_info['id'] && ($context['folder'] != 'sent' || $context['folder'] == 'unread'))]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$context['folder'] = !isset($_REQUEST['f']) || $_REQUEST['f'] != 'sent' ? 'inbox' : 'sent';]]></search>
+		<add><![CDATA[$context['folder'] = !isset($_REQUEST['f']) || $_REQUEST['f'] != 'sent' ? (!isset($_REQUEST['f']) || $_REQUEST['f'] != 'unread' ? 'inbox' : 'unread') : 'sent';]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- New PM side menu, includes Outbox (PersonalMessage.php)              -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[function messageIndexBar($area)
+{
+	global $txt, $context, $scripturl, $sourcedir, $sc, $modSettings, $settings, $user_info, $options;]]></search>
+		<add><![CDATA[function messageIndexBar($area)
+{
+	global $txt, $context, $scripturl, $sourcedir, $sc, $modSettings, $settings, $user_info, $options, $user_settings;]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA['send' => array(
+					'label' => $txt['new_message'],
+					'custom_url' => $scripturl . '?action=pm;sa=send',
+					'permission' => allowedTo('pm_send'),
+				),
+				'inbox' => array(
+					'label' => $txt['inbox'],
+					'custom_url' => $scripturl . '?action=pm',
+				),
+				'sent' => array(
+					'label' => $txt['sent_items'],
+					'custom_url' => $scripturl . '?action=pm;f=sent',
+				),
+			),
+		),
+		'labels' => array(
+			'title' => $txt['pm_labels'],
+			'areas' => array(),
+		),
+		'actions' => array(
+			'title' => $txt['pm_actions'],
+			'areas' => array(]]></search>
+		<add><![CDATA['inbox' => array(
+					'label' => $txt['inbox'],
+					'custom_url' => $scripturl . '?action=pm',
+				),
+			),
+		),
+		'actions' => array(
+			'title' => $txt['pm_actions'],
+			'areas' => array(
+				'send' => array(
+					'label' => $txt['new_message'],
+					'custom_url' => $scripturl . '?action=pm;sa=send',
+					'permission' => allowedTo('pm_send'),
+					'enabled' => !empty($modSettings['eps_block_1st_day']) && !empty($user_settings['activation_time']) ? ($user_settings['activation_time'] < time() - 86400) : true,
+				),]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (empty($context['currently_using_labels']))
+		unset($pm_areas['labels']);
+	else
+	{
+		// Note we send labels by id as it will have less problems in the querystring.
+		$unread_in_labels = 0;
+		foreach ($context['labels'] as $label)
+		{
+			if ($label['id'] == -1)
+				continue;
+
+			// Count the amount of unread items in labels.
+			$unread_in_labels += $label['unread_messages'];
+
+			// Add the label to the menu.
+			$pm_areas['labels']['areas']['label' . $label['id']] = array(
+				'label' => $label['name'] . (!empty($label['unread_messages']) ? ' (<strong>' . $label['unread_messages'] . '</strong>)' : ''),
+				'custom_url' => $scripturl . '?action=pm;l=' . $label['id'],
+				'unread_messages' => $label['unread_messages'],
+				'messages' => $label['messages'],
+			);
+		}
+
+		if (!empty($unread_in_labels))
+			$pm_areas['labels']['title'] .= ' (' . $unread_in_labels . ')';
+	}]]></search>
+		<add><![CDATA[if (!empty($context['currently_using_labels']))
+	{
+		// Note we send labels by id as it will have less problems in the querystring.
+		$unread_in_labels = 0;
+		foreach ($context['labels'] as $label)
+		{
+			if ($label['id'] == -1)
+				continue;
+
+			// Count the amount of unread items in labels.
+			$unread_in_labels += $label['unread_messages'];
+
+			// Add the label to the menu.
+			$pm_areas['folders']['areas']['label' . $label['id']] = array(
+				'label' => '&gt; ' . $label['name'] . (!empty($label['unread_messages']) ? ' (<strong>' . $label['unread_messages'] . '</strong>)' : ''),
+				'custom_url' => $scripturl . '?action=pm;l=' . $label['id'],
+				'unread_messages' => $label['unread_messages'],
+				'messages' => $label['messages'],
+			);
+		}
+
+		if (!empty($unread_in_labels))
+			$pm_areas['folders']['title'] .= ' (' . $unread_in_labels . ')';
+	}
+
+	$pm_areas['folders']['areas']['sent'] = array(
+		'label' => $txt['sent_items'],
+		'custom_url' => $scripturl . '?action=pm;f=sent',
+	);
+	$pm_areas['folders']['areas']['unread'] = array(
+		'label' => $txt['unread_items'],
+		'custom_url' => $scripturl . '?action=pm;f=unread',
+	);
+]]></add>
+	</operation>
+
+<!-------------------------------------------------------------------------->
+<!-- Deny ability to PM for 1st Day  (PersonalMessage.php)                -->
+<!-------------------------------------------------------------------------->
+	<operation>
+		<search position="replace"><![CDATA[global $context, $options, $smcFunc, $language, $user_info;
+
+	isAllowedTo('pm_send');
+
+	loadLanguage('PersonalMessage');]]></search>
+		<add><![CDATA[global $context, $options, $smcFunc, $language, $user_info, $user_settings;
+
+	isAllowedTo('pm_send');
+
+	loadLanguage('PersonalMessage');
+	if (!empty($modSettings['eps_block_1st_day']) && !empty($user_settings['activation_time']) && ($user_settings['activation_time'] > time() - 86400))
+		fatal_lang_error('pm_send_blocked', false);
+]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------------->
+<!-- Curve Template edits (PersonalMessage.template.php & Profile.template.php) -->
+<!-------------------------------------------------------------------------------->
+<file name="$themedir/PersonalMessage.template.php">
+  <operation>
+    <search position="replace"><![CDATA[
+			<th align="center" width="4%" class="last_th">
+				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
+			</th>]]></search>
+		<add><![CDATA[';
+	if ($context['folder'] != 'unread')
+    echo '
+			<th align="center" width="4%" class="last_th">
+				<input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" />
+			</th>';
+	echo ']]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>]]></search>
+    <add><![CDATA[';
+    if ($context['folder'] != 'unread')
+      echo '
+			<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></add>
+	</operation>
+	<operation>
+    <search position="before"><![CDATA[<div class="floatright">&nbsp;';]]></search>
+    <add><![CDATA[
+		
+if ($context['folder'] != 'unread') 
+{]]></add>
+  </operation>
+  <operation>
+    <search position="after"><![CDATA[  echo '
+				</div>
+	</div>';
+}]]></search>
+    <add><![CDATA[}
+
+]]></add>
+	</operation>    
+	<operation>
+    <search position="replace"><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons))]]></search>
+    <add><![CDATA[elseif ($context['display_mode'] == 2 && isset($conversation_buttons) && $context['folder'] != 'unread')]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[// Show the conversation buttons.
+			echo '
+					<div class="pagesection">';
+
+			template_button_strip($conversation_buttons, 'right');]]></search>
+		<add><![CDATA[// Show the conversation buttons.
+			echo '
+					<div class="pagesection">';
+
+			if ($context['folder'] != 'unread')
+        template_button_strip($conversation_buttons, 'right');]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>]]></search>
+		<add><![CDATA[$which = $txt[ isset($context['edit']) ? 'edit_message' : 'new_message' ];
+	echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $which, '" />&nbsp;', $which, '</span>]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[if (isset($context['pm_sent']))
+		echo '
+		<div class="windowbg" id="profile_success">
+			', $txt['pm_sent'], '
+		</div>';]]></search>
+		<add><![CDATA[
+
+	// Message edited? Show a small indication.
+	elseif (isset($context['pm_edit']))
+		echo '
+		<div class="windowbg" id="profile_success">
+			', $txt['pm_edited'], '
+		</div>';
+
+	// Message unsent? Show a small indication.
+	elseif (isset($context['pm_unsent']))
+		echo '
+		<div class="windowbg" id="profile_success">
+			', $txt['pm_unsent'], '
+		</div>';
+
+	// Message unsent some? Show a small indication.
+	elseif (isset($context['pm_unsent_some']))
+		echo '
+		<div class="windowbg" id="profile_success">
+			', $txt['pm_unsent_some'], '
+		</div>';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+				<p><label for="outbox"><input type="checkbox" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '"', $context['copy_to_outbox'] ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['pm_save_outbox'], '</label></p>]]></search>
+		<add><![CDATA[echo '
+				<input type="hidden" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '" checked="checked" class="input_check" />]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// If we are not in single display mode show the subjects on the top!
+	if ($context['display_mode'] != 1)
+	{
+		template_subject_list();
+		echo '<div class="clear_right"><br /></div>';
+	}
+
+	// Got some messages to display?
+	if ($context['get_pmessage']('message', true))]]></search>
+		<add><![CDATA[// If we are not in single display mode show the subjects on the top!
+	if ($context['display_mode'] == 2 && !isset($_GET['pmid']))
+	{
+		template_subject_list();
+		echo '
+	<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+</form>';
+		return;
+	}
+	if ($context['display_mode'] == 0)
+		template_subject_list();
+
+	if ($context['display_mode'] == 0)
+		echo '<div class="clear_right"><br /></div>';
+
+	// Got some messages to display?
+	$m = $context['get_pmessage']('message', true);
+	if ( (($context['display_mode'] == 2 && isset($_GET['pmid'])) || $context['display_mode'] != 2) & $m)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<th align="center" width="4%" class="first_th">
+				<a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? '' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/im_switch.gif" alt="', $txt['pm_change_view'], '" title="', $txt['pm_change_view'], '" width="16" height="16" /></a>
+			</th>]]></search>
+		<add><![CDATA[<th align="center" width="4%" class="first_th">
+				' . (!empty($modSettings['eps_pm_view_switch']) ? '<a href="' . $scripturl . '?action=pm;view;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? '' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . '"><img src="' . $settings['images_url'] . '/im_switch.gif" alt="' . $txt['pm_change_view'] . '" title="' . $txt['pm_change_view'] . '" width="16" height="16" /></a>' : '') . '
+			</th>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$next_alternate = false;]]></search>
+		<add><![CDATA[$next_alternate = false;
+	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+				', $message['is_replied_to'] ? '<img src="' . $settings['images_url'] . '/icons/pm_replied.gif" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />' : '<img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" />', '</td>
+			<td>', $message['time'], '</td>
+			<td>', ($context['display_mode'] != 0 && $context['current_pm'] == $message['id'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></search>
+		<add><![CDATA[
+				', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'outbox' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
+			<td>', $message['time'], '</td>
+			<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';]]></search>
+		<add><![CDATA[
+					if ($context['folder'] != 'unread')
+						echo '
+					<li class="reply_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $txt['reply'], '</a></li>
+					<li class="quote_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $txt['quote'], '</a></li>';
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';]]></search>
+		<add><![CDATA[<li class="remove_button"><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $txt['delete'], '</a></li>';
+			if ($context['folder'] == 'unread')
+			{
+				if (empty($modSettings['eps_deny_unsend']))
+					echo '
+					<li class="unsend_button"><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $txt['unsend_item'], '</a></li>';
+				if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+					echo '
+					<li class="edit_button"><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $txt['pm_edit'], '</a></li>';
+			}
+]]></add>
+	</operation>
+</file>		
+<file name="$themedir/Profile.template.php">
+	<operation>
+		<search position="replace"><![CDATA[function template_profile_pm_settings()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	echo '
+								<dt>
+										<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
+								</dt>
+								<dd>
+										<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
+											<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
+											<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
+											<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
+										</select>
+								</dd>]]></search>
+		<add><![CDATA[function template_profile_pm_settings()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	if (!empty($modSettings['eps_pm_view_switch']))
+		echo '
+								<dt>
+										<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
+								</dt>
+								<dd>
+										<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 &amp;&amp; !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
+											<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
+											<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
+											<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
+										</select>
+								</dd>';
+	echo ']]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+										<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="input_check" />
+								</dd>
+						</dl>
+						<hr />
+						<dl>
+								<dt>
+										<label for="copy_to_outbox"> ', $txt['copy_to_outbox'], '</label>
+								</dt>
+								<dd>
+										<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
+										<input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="input_check" />
+								</dd>
+								<dt>
+										<label for="pm_remove_inbox_label">', $txt['pm_remove_inbox_label'], '</label>
+								</dt>
+								<dd>
+										<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
+										<input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="input_check" />
+								</dd>';]]></search>
+		<add><![CDATA[
+										<input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="input_check" />
+								</dd>
+						</dl>';]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
+<!-- CSS edits (index.css)                                                -->
+<!-------------------------------------------------------------------------->
+<file name="$themedir/css/index.css">
+	<operation>
+		<search position="replace"><![CDATA[ul.quickbuttons li.modify_button]]></search>
+		<add><![CDATA[
+ul.quickbuttons li.unsend_button
+{
+	background: url(../images/buttons/eps_mail_unsend.png) no-repeat 0 0;
+}
+ul.quickbuttons li.edit_button
+{
+	background: url(../images/buttons/modify.gif) no-repeat 0 0;
+}
+ul.quickbuttons li.modify_button]]></add>
+	</operation>
+</file>
+
+<!-------------------------------------------------------------------------->
+<!-- Core Template edits (PersonalMessage.template.php)                   -->
+<!-------------------------------------------------------------------------->
+<file name="$boarddir/Themes/core/PersonalMessage.template.php" error="skip">
+  <operation>
+    <search position="replace"><![CDATA[
+				<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>]]></search>
+		<add><![CDATA[';
+	if ($context['folder'] != 'unread')
+    echo '
+				<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="input_check" /></td>
+';
+  echo '
+			]]></add>
+	</operation>
+	<operation>
+    <search position="replace"><![CDATA[
+				<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>]]></search>
+		<add><![CDATA[';
+		if ($context['folder'] != 'unread')
+      echo '
+				<td align="center" width="4%"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="input_check" /></td>';
+		echo ']]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[if ($context['show_delete'])]]></search>
+    <add><![CDATA[if ($context['show_delete'] && $context['folder'] != 'unread')]]></add>
+  </operation>
+	
+	<operation>
+		<search position="replace"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2', !empty($_REQUEST['pmsg']) ? ';pmsg=' . ((int) $_REQUEST['pmsg']) : '', '"]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</span>]]></search>
+		<add><![CDATA[$which = $txt[ isset($context['edit']) ? 'edit_message' : 'new_message' ];
+	echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+					<span class="ie6_header floatleft"><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $which, '" />&nbsp;', $which, '</span>]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[if (isset($context['pm_sent']))
+		echo '
+			<div class="windowbg" id="profile_success">
+				', $txt['pm_sent'], '
+			</div>';]]></search>
+		<add><![CDATA[
+
+	// Message edited? Show a small indication.
+	elseif (isset($context['pm_edit']))
+		echo '
+			<div class="windowbg" id="profile_success">
+				', $txt['pm_edited'], '
+			</div>';
+
+	// Message unsent? Show a small indication.
+	elseif (isset($context['pm_unsent']))
+		echo '
+			<div class="windowbg" id="profile_success">
+				', $txt['pm_unsent'], '
+			</div>';
+
+	// Message unsent? Show a small indication.
+	elseif (isset($context['pm_unsent_some']))
+		echo '
+			<div class="windowbg" id="profile_success">
+				', $txt['pm_unsent_some'], '
+			</div>';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+				<p><label for="outbox"><input type="checkbox" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '"', $context['copy_to_outbox'] ? ' checked="checked"' : '', ' class="input_check" /> ', $txt['pm_save_outbox'], '</label></p>]]></search>
+		<add><![CDATA[echo '
+				<input type="hidden" name="outbox" id="outbox" value="1" tabindex="', $context['tabindex']++, '" checked="checked" class="input_check" />]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[// If we are not in single display mode show the subjects on the top!
+	if ($context['display_mode'] != 1)
+	{
+		template_subject_list();
+		echo '<br />';
+	}
+
+	// Got some messages to display?
+	if ($context['get_pmessage']('message', true))]]></search>
+		<add><![CDATA[// If we are not in single display mode show the subjects on the top!
+	if ($context['display_mode'] == 2 && !isset($_GET['pmid']))
+		return template_subject_list();
+	if ($context['display_mode'] == 0)
+		template_subject_list();
+
+	if ($context['display_mode'] == 0)
+		echo '<br />';
+
+	// Got some messages to display?
+	$m = $context['get_pmessage']('message', true);
+	if ( (($context['display_mode'] == 2 && isset($_GET['pmid'])) || $context['display_mode'] != 2) & $m)]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<td align="center" width="2%"><a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? '' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/im_switch.gif" alt="', $txt['pm_change_view'], '" title="', $txt['pm_change_view'], '" width="16" height="16" /></a></td>]]></search>
+		<add><![CDATA[<td align="center" width="2%">' . (!empty($modSettings['eps_pm_view_switch']) ? '<a href="' . $scripturl . '?action=pm;view;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? '' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '') . '"><img src="' . $settings['images_url'] . '/im_switch.gif" alt="' . $txt['pm_change_view'] . '" title="' . $txt['pm_change_view'] . '" width="16" height="16" /></a>' : '') . '</th>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$next_alternate = 0;]]></search>
+		<add><![CDATA[$next_alternate = 0;
+	$eps_mail_read = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_read.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_unread = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_unread.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';
+	$eps_mail_reply = '<img src="' . $settings['images_url'] . '/buttons/eps_mail_reply.png" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+					', $message['is_replied_to'] ? '<img src="' . $settings['images_url'] . '/icons/pm_replied.gif" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />' : '<img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" />', '</td>
+				<td>', $message['time'], '</td>
+				<td>', ($context['display_mode'] != 0 && $context['current_pm'] == $message['id'] ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></search>
+		<add><![CDATA[
+					', $context['folder'] == 'sent' ? $eps_mail_read : ($context['folder'] == 'outbox' ? $eps_mail_unread : ($message['is_replied_to'] ? $eps_mail_reply : ($message['is_unread']  ? $eps_mail_unread : $eps_mail_read))), '</td>
+				<td>', $message['time'], '</td>
+				<td><a href="', $scripturl, '?action=pm;pmid=', $message['id'], ';kstart;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] && $context['folder'] != 'unread' ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[echo '
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a></li>
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $quote_button, '</a></li>';]]></search>
+		<add><![CDATA[if ($context['folder'] != 'unread')
+					echo '
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a></li>
+							<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote', $context['folder'] == 'sent' ? '' : ';u=' . $message['member']['id'], '">', $quote_button, '</a></li>';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[<li><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $delete_button, '</a></li>';]]></search>
+		<add><![CDATA[<li><a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';', $context['session_var'], '=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $delete_button, '</a></li>';
+			if ($context['folder'] == 'unread')
+			{
+				if (empty($modSettings['eps_deny_unsend']))
+					echo '
+					<li><a href="', $scripturl, '?action=pm;sa=unsend;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '" onclick="return confirm(\'', addslashes($txt['unsend_message']), '?\');">', $unsend_button, '</a></li>';
+				if (empty($modSettings['eps_deny_edit']) && empty($context['can_edit_msg']))
+					echo '
+					<li><a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';edit">', $edit_button, '</a></li>';
+			}
+]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');]]></search>
+		<add><![CDATA[$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
+		$unsend_button = create_button('eps_mail_unsend.png', 'unsend_item', 'unsend_item', 'align="middle"');
+		$edit_button = create_button('modify.gif', 'edit_message', 'pm_edit', 'align="middle"');]]></add>
+	</operation>		
+</file>		
+
+<!-------------------------------------------------------------------------->
+<!-- Language file edits (English - Modifications & PersonalMessage)      -->
+<!-------------------------------------------------------------------------->
+<file name="$languagedir/Modifications.english.php">
+	<operation>
+		<search position="replace"><![CDATA[// Version: 2.0; Modifications]]></search>
+		<add><![CDATA[// Version: 2.0; Modifications
+/* Enhanced PM System mod */
+$txt['eps_title'] = 'Enhanced PM System';
+$txt['eps_pm_view_switch'] = 'Allow users to select PM views other than conversation mode';
+$txt['eps_deny_unsend'] = 'Do not allow users to unsend an unread PM';
+$txt['eps_deny_edit'] = 'Do not allow users to edit an unread PM';
+$txt['eps_block_1st_day'] = 'Block ability to PM anybody for first day';
+/* End Enhanced PM System mod */
+]]></add>
+	</operation>
+</file>
+<file name="$languagedir/PersonalMessage.english.php">
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_msg_label_title'] = 'Label Message';
+$txt['pm_msg_label_apply'] = 'Add Label';
+$txt['pm_msg_label_remove'] = 'Remove Label';]]></search>
+		<add><![CDATA[$txt['pm_msg_label_title'] = 'Move Message';
+$txt['pm_msg_label_apply'] = 'Move to';
+$txt['pm_msg_label_remove'] = 'Current Folder';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_sel_label_title'] = 'Label Selected';]]></search>
+		<add><![CDATA[$txt['pm_sel_label_title'] = 'Move Selected';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_manage_labels'] = 'Manage Labels';
+$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected labels?';
+$txt['pm_labels_desc'] = 'From here you can add, edit and delete the labels used in your personal message center.';
+$txt['pm_label_add_new'] = 'Add New Label';
+$txt['pm_label_name'] = 'Label Name';
+$txt['pm_labels_no_exist'] = 'You currently have no labels setup!';]]></search>
+		<add><![CDATA[$txt['pm_manage_labels'] = 'Manage Folders';
+$txt['pm_labels_delete'] = 'Are you sure you wish to delete the selected folders?';
+$txt['pm_labels_desc'] = 'From here you can add, edit and delete the folders used in your personal message center.';
+$txt['pm_label_add_new'] = 'Add New Folder';
+$txt['pm_label_name'] = 'Folder Name';
+$txt['pm_labels_no_exist'] = 'You currently have no folders setup!';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_labels'] = 'Labels';]]></search>
+		<add><![CDATA[$txt['pm_labels'] = 'Folders';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_search_choose_label'] = 'Choose labels to search by, or search all';]]></search>
+		<add><![CDATA[$txt['pm_search_choose_label'] = 'Choose folders to search by, or search all';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';]]></search>
+		<add><![CDATA[$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['sent_items'] = 'Sent Items';]]></search>
+		<add><![CDATA[$txt['sent_items'] = 'Sent Items';
+$txt['unread_items'] = 'Outbox';
+$txt['unsend_item'] = 'Unsend';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_rule_label'] = 'Label message with';
+$txt['pm_rule_sel_label'] = 'Select Label';]]></search>
+		<add><![CDATA[$txt['pm_rule_label'] = 'Move message to folder';
+$txt['pm_rule_sel_label'] = 'Select Folder';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[?>]]></search>
+		<add><![CDATA[$txt['pm_edit'] = 'Edit';
+$txt['edit_message'] = 'Edit Message';
+$txt['pm_unsent_denied'] = 'You cannot unsend a message.';
+$txt['pm_unsent'] = 'Your message has been unsent from all recipients successfully.';
+$txt['pm_unsent_some'] = 'Your message has been unsent from all recipients who haven\'t read it successfully.';
+$txt['pm_edited'] = 'Your message has been edited and all new recipients have been sent emails.';
+$txt['pm_no_edit'] = 'Unable to edit PM because at least one recipient has read the PM that you are wanting to edit.';
+$txt['pm_send_blocked'] = 'You are not allowed to send PMs until 24 hours after account activation.';
+$txt['unsend_message'] = 'Unsend this message to all recipients who haven\'t read it yet';
+
+?>]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Label';]]></search>
+		<add><![CDATA[$txt['pm_actions_filter_by_label'] = 'Filter By Folder';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_current_label'] = 'Label';]]></search>
+		<add><![CDATA[$txt['pm_current_label'] = 'Folder';]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$txt['pm_readable_label'] = 'apply label &quot;{LABEL}&quot;';]]></search>
+		<add><![CDATA[$txt['pm_readable_label'] = 'move to folder &quot;{LABEL}&quot;';]]></add>
+	</operation>
+</file>
+</modification>
