@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:Enhanced_PM_System</id>
-<version>3.5</version>
+<version>3.5.2</version>
 
 <!-------------------------------------------------------------------------->
 <!-- Permission modifications (Help.php)                                  -->
@@ -755,7 +755,7 @@ function UnsendMessage()
 					AND pmr.deleted = {int:is_deleted}
 					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
-			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {raw:current_member}
+			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
 				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($pmsg) ? '' : '
 				AND pm.id_pm = {int:pmsg}') . '
 			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : '{raw:sort}') . ($descending ? ' DESC' : ' ASC') . (empty($pmsg) ? '
@@ -775,7 +775,7 @@ function UnsendMessage()
 					AND pmr.deleted = {int:is_deleted}
 					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {raw:pm_member})') : '') . '
-			WHERE ' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pm.id_member_from = {raw:current_member}
+			WHERE ' . ($context['folder'] == 'sent' || $context['folder'] == 'unread' ? 'pm.id_member_from = {int:current_member}
 				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($pmsg) ? '' : '
 				AND pm.id_pm = {int:pmsg}') .
 				($context['folder'] == 'sent' ? ' AND pmr.is_read > {int:not_read}' : ($context['folder'] == 'unread' ? ' AND pmr.is_read = {int:not_read}' : '')) . '
@@ -1163,13 +1163,17 @@ function UnsendMessage()
 <!-- Search for users in Sent Items and Outbox folders                    -->
 <!-------------------------------------------------------------------------->
 	<operation>
-		<search position="replace"><![CDATA[$userQuery = 'AND (pm.id_member_from IN ({array_int:member_list}) OR (pm.id_member_from = 0 AND (pm.from_name LIKE {raw:guest_user_name_implode})))';]]></search>
-		<add><![CDATA[// BEGIN: Enhanced PM System - Search users during Sent Item/Outbox searches:
+                <search position="replace"><![CDATA[
+				$userQuery = 'AND (pm.id_member_from IN ({array_int:member_list}) OR (pm.id_member_from = 0 AND (' . implode(' OR ', $where_clause) . ')))';
+]]></search>
+                <add><![CDATA[
+			// BEGIN: Enhanced PM System - Search users during Sent Item/Outbox searches:
 			if ($context['folder'] == 'inbox')
-				$userQuery = 'AND (pm.id_member_from IN ({array_int:member_list}) OR (pm.id_member_from = 0 AND (pm.from_name LIKE {raw:guest_user_name_implode})))';
+				$userQuery = 'AND (pm.id_member_from IN ({array_int:member_list}) OR (pm.id_member_from = 0 AND (' . implode(' OR ', $where_clause) . ')))';
 			else
-				$userQuery = 'AND (pmr.id_member IN ({array_int:member_list}))';
-			// END: Enhanced PM System - Search users during Sent Item/Outbox searches:]]></add>
+				$userQuery = 'AND (pm.id_member IN ({array_int:member_list}))';
+			// END: Enhanced PM System - Search users during Sent Item/Outbox searches:
+]]></add>
 	</operation>
 	
 	<operation>
