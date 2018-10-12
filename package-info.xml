@@ -7,7 +7,52 @@
 	<type>modification</type>
 	<version>3.5.2</version>
 
-	<install for="2.0 - 2.0.99">
+	<install for="2.0 - 2.0.14">
+		<readme parsebbc="true">readme.txt</readme>
+		<code>add_remove_hooks.php</code>
+		<database>edit_db.php</database>
+		<modification type="file">install_20b15.xml</modification>
+		<require-file name="Subs-EnhancedPM.php" destination="$sourcedir" />
+		<require-file name="EnhancedPMSystem.english.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.english-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.dutch.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.russian-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.portuguese_brazilian.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.portuguese_brazilian-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_es.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_es-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="EnhancedPMSystem.spanish_latin-utf8.php" destination="$boarddir/Themes/default/languages" />
+		<require-file name="enhanced_pm.css" destination="$themedir/css" />
+		<require-file name="eps_mail_read.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_reply.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unread.png" destination="$imagesdir/buttons" />
+		<require-file name="eps_mail_unsend.png" destination="$imagesdir/buttons" />
+		<redirect timeout="5000" url="?action=admin;area=modsettings;sa=eps" />
+	</install>
+	<uninstall for="2.0 - 2.0.14">
+		<readme parsebbc="true">uninstall.txt</readme>
+		<code>add_remove_hooks.php</code>
+		<modification type="file" reverse="true">install_20b15.xml</modification>
+		<remove-file name="$sourcedir/Subs-EnhancedPM.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.english-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.dutch.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.portuguese_brazilian-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.russian-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_es-utf8.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin.php" />
+		<remove-file name="$boarddir/Themes/default/languages/EnhancedPMSystem.spanish_latin-utf8.php" />
+		<remove-file name="$themedir/css/enhanced_pm.css" />
+		<remove-file name="$imagesdir/buttons/eps_mail_read.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_reply.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unread.png" />
+		<remove-file name="$imagesdir/buttons/eps_mail_unsend.png" />
+	</uninstall>
+
+	<install for="2.0.15 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
 		<code>add_remove_hooks.php</code>
 		<database>edit_db.php</database>
@@ -30,7 +75,7 @@
 		<require-file name="eps_mail_unsend.png" destination="$imagesdir/buttons" />
 		<redirect timeout="5000" url="?action=admin;area=modsettings;sa=eps" />
 	</install>
-	<uninstall for="2.0 - 2.0.99">
+	<uninstall for="2.0.15 - 2.0.99">
 		<readme parsebbc="true">uninstall.txt</readme>
 		<code>add_remove_hooks.php</code>
 		<modification type="file" reverse="true">install_20x.xml</modification>

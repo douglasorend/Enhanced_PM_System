@@ -1,4 +1,4 @@
-v3.5.2 - November 23rd, 2017
+v3.5.2 - October 12th, 2018
 o Support for SMF 2.0.15 (by aegersz)
 
 v3.5.1 - August 19th, 2016
